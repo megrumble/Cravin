@@ -231,9 +231,7 @@ $(document).ready(function () {
                 app.lastScreens.push(closeId);
             }
             // Animate the closing, and change the CSS
-            $(closeId).animate({
-                opacity: 0
-            }, 500, function () {
+            $(closeId).animate({ opacity: 0 }, 500, function () { 
                 $(openId).css({
                     "display": "block",
                     "min-height": "85vh",
@@ -346,7 +344,6 @@ $(document).ready(function () {
                 app.hideLoadingScreen();
                 app.switchScreens("#craving-select-screen", "#results-screen", true);
             })
-
         },
         addRestuarantToDb: function (idx) {
             var restaurant = app.restaurantResults[idx];
@@ -372,8 +369,8 @@ $(document).ready(function () {
             });
         },
         backButton: function () {
-            if (app.lastScreens.length < 0) {
-                window.history.pop();
+            if (app.lastScreens.length <= 0) {
+                window.history.popstate();
                 return;
             };
             // Grab the value before we pop it.
@@ -397,7 +394,9 @@ $(document).ready(function () {
                 });
             });
             $(document).on("click", ".go-to-restaurant", function (e) {
+                e.preventDefault();
                 app.addRestuarantToDb(parseInt($(this).attr("data-index")));
+                window.open($(this).attr("href"));
 
             });
             $("#btn-fast").on('click', function (e) {
