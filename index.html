@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <!-- Required meta tags -->
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
+  <link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+    crossorigin="anonymous" />
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous" />
+  <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
+</head>
+
+<body>
+
+  <div id="loading-screen">
+    <i class="fa fa-spinner fa-spin fa-5x loading-icon"></i>
+  </div>
+
+  <!-- Insert Image of Awning Here Using CSS -->
+  <div id="awning">
+
+  </div>
+
+  <nav class="navbar navbar-inverse bg-inverse" class="navy">
+    <a class="navbar-brand" href="" id="btn-home">
+        <img src="assets/images/burger.png" width="35" class="d-inline-block" alt="">
+          <h6>CRAVIN'</h6>
+      </a>
+    <div class="mr-auto">
+      <img id="person-img" class="d-inline-block" />
+    </div>
+  </nav>
+
+
+  <!-- Wrapper Container will be using JavaScript to alter content and classes -->
+  <div id="splash-screen" class="wrapper">
+    <div class="jumbotron jumbotron-fluid">
+      <div class="container">
+        <h1 class="display-1" id="title"> Cravin' </h1>
+      </div>
+    </div>
+    <!-- Loading Animation to Go Here -->
+
+    <!-- Image of Burger Goes Here -->
+
+    <img id="burger" src="assets/images/burger.png" class="img-fluid" alt="Responsive image">
+  </div>
+  <div id="login-screen" class="wrapper">
+    <div class="jumbotron jumbotron-fluid">
+      <h1 class="text-center"> Sign in to Cravin' </h1>
+    </div>
+    <!-- Loading Animation to Go Here -->
+
+    <!-- Image of Burger Goes Here -->
+    <div class="row justify-content-md-center">
+      <div class="col-sm-10 col-md-8">
+        <img src="assets/images/salad.png" class="img-fluid" alt="Responsive image">
+      </div>
+    </div>
+
+    <br />
+    <button class="btn btn-primary" id="btn-sign-in">
+      Sign in with Google
+    </button>
+  </div>
+
+
+
+  <div id="craving-select-screen">
+    <div class="jumbotron">
+      <h1 class="text-center">What are you Cravin' today?</h1>
+    </div>
+    <div class="container">
+      <h3>Select your craving.</h3>
+      <div class="row show-cravings justify-content-center">
+        <div class="col-6 col-md-4 craving-box burger-craving-box" data-craving-id="168">
+          <div class="craving-check-wrapper">
+            <i class="fa fa-check fa-5x craving-check"></i>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 craving-box taco-craving-box" data-craving-id="997">
+          <div class="craving-check-wrapper">
+            <i class="fa fa-check fa-5x craving-check"></i>
+          </div>
+        </div>
+      </div>
+      <div class="row show-cravings justify-content-center">
+        <div class="col-6 col-md-4 craving-box salad-craving-box" data-craving-id="998">
+          <div class="craving-check-wrapper">
+            <i class="fa fa-check fa-5x craving-check"></i>
+          </div>
+        </div>
+        <div class="col-6 col-md-4 craving-box pie-craving-box" data-craving-id="82">
+          <div class="craving-check-wrapper">
+            <i class="fa fa-check fa-5x craving-check"></i>
+          </div>
+        </div>
+      </div>
+      <div class="craving-buttons">
+        <h3>Select how you want it.</h3>
+        <div class="craving-buttons-group">
+          <div class="row justify-content-center">
+            <div class="col-12 col-lg-4">
+              <a href="" id="btn-best" class="btn btn-dark btn-large">Get the best!</a>
+            </div>
+          </div>
+          <div class="row justify-content-center">
+            <div class="col-12 col-lg-4">
+              <a href="" id="btn-fast" class="btn btn-dark btn-large">Get it fast!</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div id="results-screen" class="wrapper">
+    <h3>Here's what's in your 'hood!</h3>
+    <div class="container">
+      <div id="results" class="">
+
+        <!--div class="results-box first-result">
+          <h2 class="restaurant-name"></h2>
+          <div class="row ">
+            <div class="col-12 col-sm-4">
+              <img class="results-image img-fluid img-thumbnail" />
+            </div>
+            <div class="col-12 col-sm-8">
+              <p class="description"></p>
+            </div>
+          </div>
+        </div-->
+      </div>
+    </div>
+  </div>
+
+
+  <div id="alert-modal" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="alert-title" class="modal-title"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <p id="alert-body"></p>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="yes-no-modal" class="modal fade">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 id="yes-no-title" class="modal-title"></h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+        </div>
+        <div class="modal-body">
+          <p id="yes-no-body"></p>
+        </div>
+        <div class="modal-footer">
+          <button id="btn-yes" type="button" class="btn btn-primary" disabled>Yes!</button>
+          <button id="btn-no" type="button" class="btn btn-secondary" disabled>No</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Motto & Copyright Goes Here -->
+
+  <div id="footer" class="container-fluid" style="margin-top: 20px">
+    <div class="row justify-content-center">
+      <div class="col-12 col-md-8 col-md-offset-2">
+        <div class="row justify-content-center" style="padding-bottom: 20px;">
+          <div class="col-6 col-md-4 navbtn">
+            <a href="" id="btn-back" class="btn btn-dark btn-large">Back</a>
+          </div>
+          <div class="col-6 col-md-4 navbtn">
+            <a href="" id="btn-startover" class="btn btn-dark btn-large">Start Over</a>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+    <h5> Directing you to the best cravin's in your area! </h5>
+    <h6> Copyright &copy; 2017 </h6>
+  </div>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
+    crossorigin="anonymous"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
+    crossorigin="anonymous"></script>
+  <script src="assets/js/app.js"></script>
+</body>
+
+</html>
