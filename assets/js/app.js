@@ -231,9 +231,7 @@ $(document).ready(function () {
                 app.lastScreens.push(closeId);
             }
             // Animate the closing, and change the CSS
-            $(closeId).animate({
-                opacity: 0
-            }, 500, function () {
+            $(closeId).animate({ opacity: 0 }, 500, function () { 
                 $(openId).css({
                     "display": "block",
                     "min-height": "85vh",
@@ -396,7 +394,9 @@ $(document).ready(function () {
                 });
             });
             $(document).on("click", ".go-to-restaurant", function (e) {
+                e.preventDefault();
                 app.addRestuarantToDb(parseInt($(this).attr("data-index")));
+                window.open($(this).attr("href"));
 
             });
             $("#btn-fast").on('click', function (e) {

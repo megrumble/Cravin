@@ -121,7 +121,7 @@ nav {
   padding-bottom: 10px;
 }
 
-#login-screen, #craving-select-screen, #splash-screen, #results-screen {
+#login-screen, #craving-select-screen, #splash-screen, #results-screen, #add-review{
   position: relative;
   left: 0;
   top: 0;
