@@ -346,7 +346,6 @@ $(document).ready(function () {
                 app.hideLoadingScreen();
                 app.switchScreens("#craving-select-screen", "#results-screen", true);
             })
-
         },
         addRestuarantToDb: function (idx) {
             var restaurant = app.restaurantResults[idx];
@@ -372,8 +371,8 @@ $(document).ready(function () {
             });
         },
         backButton: function () {
-            if (app.lastScreens.length < 0) {
-                window.history.pop();
+            if (app.lastScreens.length <= 0) {
+                window.history.popstate();
                 return;
             };
             // Grab the value before we pop it.
