@@ -165,7 +165,25 @@ nav {
   background-color: rgba(0, 0, 0, .7);
   z-index: 99999;
 }
+input[type=checkbox]
+{
+  margin-left: 10px;
+  /* Double-sized Checkboxes */
+  -ms-transform: scale(2); /* IE */
+  -moz-transform: scale(2); /* FF */
+  -webkit-transform: scale(2); /* Safari and Chrome */
+  -o-transform: scale(2); /* Opera */
+  transform: scale(2);
+  padding: 10px;
+}
 
+/* Might want to wrap a span around your checkbox text */
+.checkbox-text
+{
+  /* Checkbox text */
+  font-size: 110%;
+  display: inline;
+}
 .loading-icon {
   position: fixed;
   color: orange;
@@ -251,9 +269,11 @@ nav {
 .navbar-brand {
   margin: 10px;
 }
-
+.results-box a {
+  color: rgb(254, 252, 62);
+}
 .img-thumbnail {
-    height: 100%;
+    /*height: 100%;*/
     background-size: cover;
     background-position: center;
     border: 5px solid white;

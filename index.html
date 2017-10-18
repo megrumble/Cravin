@@ -7,8 +7,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src="https://www.gstatic.com/firebasejs/4.5.0/firebase.js"></script>
   <link rel="stylesheet" type="text/css" href="assets/css/reset.css" />
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M" crossorigin="anonymous" />
-  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/css/bootstrap.min.css" integrity="sha384-/Y6pD6FV/Vv2HJnA6t+vslU6fwYXjCFtcEpHbNJ0lyAFsXTsjBbfaDjzALeQsN6M"
+    crossorigin="anonymous" />
+  <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN"
+    crossorigin="anonymous" />
   <link rel="stylesheet" type="text/css" href="assets/css/style.css" />
 </head>
 
@@ -24,13 +26,17 @@
   </div>
 
   <nav class="navbar navbar-inverse bg-inverse" class="navy">
-    <!-- <a class="navbar-brand" href="" id="btn-home">
+    <div class="container">
+      <!-- <a class="navbar-brand" href="" id="btn-home">
          <img src="assets/images/burger.png" width="35" class="d-inline-block" alt="">
            <h6>CRAVIN'</h6>
        </a> -->
-    <a href="index.html"><img src="../assets/images/burger.png" width="55px" /> </a>
-    <div class="mr-auto">
-      <img id="person-img" class="d-inline-block" />
+      <a href="" id="btn-home-burger">
+        <img src="../assets/images/burger.png" width="55px" />
+      </a>
+      <span class="navbar-text">
+        <img id="person-img" class="d-inline-block" />
+      </span>
     </div>
   </nav>
 
@@ -104,6 +110,9 @@
         <div class="craving-buttons-group">
           <div class="row justify-content-center">
             <div class="col-12 col-lg-4">
+              <label for="chk-hide-previous" class="checkbox-text">Hide your previously visited restaurants?</label>
+              <input type="checkbox" id="chk-hide-previous">
+              <br />
               <a href="" id="btn-best" class="btn btn-dark btn-large">Get the best!</a>
             </div>
           </div>
@@ -149,8 +158,10 @@
         <div class="col-12">
           <textarea id="user-review-text" rows="10" class="form-control"></textarea>
         </div>
-        <a href="#" id="btn-submit-review" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
-        <a href="#" id="btn-clear-review" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
+        <div class="input-group">
+          <a href="#" id="btn-submit-review" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
+          <a href="#" id="btn-clear-review" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
+        </div>
       </div>
     </div>
   </div>
@@ -216,12 +227,13 @@
     <h5> Directing you to the best cravin's in your area! </h5>
     <h6> Copyright &copy; 2017 </h6>
   </div>
-  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+    crossorigin="anonymous"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
     crossorigin="anonymous"></script>
-      <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
   <script src="assets/js/app.js"></script>
 </body>
 
