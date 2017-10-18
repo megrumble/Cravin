@@ -88,9 +88,11 @@ var apiKeys = {
 };
 
 //Burger Animation
-window.onload=(function() {
+window.onload = (function () {
     var burg = document.getElementById("food1");
-    TweenMax.to(burg, 1, {y:60})
+    TweenMax.to(burg, 1, {
+        y: 60
+    })
 })
 
 

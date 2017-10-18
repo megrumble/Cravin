@@ -15,8 +15,8 @@ body {
   background-repeat: no-repeat;
   font-family: Heavitas, impact, helvetica;
   background-color: red;
-  background: linear-gradient(red, rgb(140, 10,10));
-  -webkit-background: linear-gradient(red, rgb(140, 10,10));
+  background: linear-gradient(red, rgb(140, 10, 10));
+  -webkit-background: linear-gradient(red, rgb(140, 10, 10));
   -ms-background: linear-gradient(red, black);
   -o-background: linear-gradient(red, black);
   /*text-shadow: -1px -1px 0 #f70, 1px -1px 0 #f70, -1px 1px 0 #f70, 1px 1px 0 #f70;*/
@@ -76,11 +76,13 @@ nav {
 }
 
 #btn-back {
-  width: 250px;
+  width: 200px;
+  margin: 10px auto;
 }
 
 #btn-startover {
-  width: 250px;
+  width: 220px;
+  margin: 10px auto;
 }
 
 #btn-best {
@@ -270,7 +272,6 @@ nav {
 
 /*Small devices (landscape phones, 576px and up)*/
 
-
 @media (max-width: 576px) {
   #title {
     font-size: 55px;
@@ -281,30 +282,26 @@ nav {
   h3 {
     font-size: 35px;
   }
-  }
 }
 
 
-/*Medium devices (tablets, 768px and up)*/
+}
 
+/*Medium devices (tablets, 768px and up)*/
 @media (min-width: 768px) {
   #title {
     font-size: 115px;
   }
 }
 
-
 /*Large devices (desktops, 992px and up)*/
-
 @media (min-width: 992px) {
   #title {
     font-size: 175px;
   }
 }
 
-
 /*Extra large devices (large desktops, 1200px and up)*/
-
 @media (min-width: 1200px) {
   #title {
     font-size: 200px;
