@@ -54,9 +54,7 @@ h6 {
   display: inline-block;
 }
 
-h1,
-h2,
-h3 {
+h1, h2, h3 {
   color: rgb(254, 252, 62);
   text-shadow: none;
 }
@@ -83,7 +81,7 @@ nav {
 }
 
 #btn-startover {
-  width: 200px;
+  width: 220px;
   margin: 10px auto;
 }
 
@@ -135,11 +133,7 @@ nav {
   padding-bottom: 10px;
 }
 
-#login-screen,
-#craving-select-screen,
-#splash-screen,
-#results-screen,
-#add-review {
+#login-screen, #craving-select-screen, #splash-screen, #results-screen, #add-review {
   position: relative;
   left: 0;
   top: 0;
@@ -256,6 +250,19 @@ nav {
 
 .navbar-brand {
   margin: 10px;
+}
+
+.img-thumbnail {
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border: 5px solid white;
+}
+
+.img-thumbnail::before {
+    padding-top: 100%;
+    display: block;
+    content: "";
 }
 
 
