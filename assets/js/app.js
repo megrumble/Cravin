@@ -87,6 +87,13 @@ var apiKeys = {
 
 };
 
+//Burger Animation
+window.onload=(function() {
+    var burg = document.getElementById("food1");
+    TweenMax.to(burg, 1, {y:60})
+})
+
+
 // URLs stored for the APIs used.
 var apiUrls = {
   zomatoBase: "https://developers.zomato.com/api/v2.1/",
