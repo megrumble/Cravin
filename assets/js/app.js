@@ -485,10 +485,10 @@ $(document).ready(function () {
                         navigator.geolocation.getCurrentPosition(function (position) {
                             app.latLong = [position.coords.latitude, position.coords.longitude];
                             app.getCity();
-
                         });
                     } else {
                         app.callApi("get", apiUrls.googleGeoLocation, "", function (response) {
+                            console.log(app);
                             app.latLong = [response.location.lat, response.location.lng];
                             app.getCity();
                         });
