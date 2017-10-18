@@ -1,11 +1,10 @@
 @font-face {
   font-family: 'Heavitas';
-  src: url('../fonts/heavitas-webfont.woff2') format('woff2'), 
-    url('../fonts/heavitas-webfont.woff') format('woff'), 
-    url('../fonts/Heavitas.ttf') format('woff');
+  src: url('../fonts/heavitas-webfont.woff2') format('woff2'), url('../fonts/heavitas-webfont.woff') format('woff'), url('../fonts/Heavitas.ttf') format('woff');
   font-weight: normal;
   font-style: normal;
 }
+
 html {
   overflow-y: scroll;
   overflow-x: hidden;
@@ -20,39 +19,49 @@ body {
   -webkit-background: linear-gradient(red, black);
   -ms-background: linear-gradient(red, black);
   -o-background: linear-gradient(red, black);
-  
   /*text-shadow: -1px -1px 0 #f70, 1px -1px 0 #f70, -1px 1px 0 #f70, 1px 1px 0 #f70;*/
   text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
 }
 
-
-#wrapper-background{
+#wrapper-background {
   height: 100%;
-  
 }
-  
 
-
-a { 
+a {
   text-shadow: none;
   color: black;
 }
-h1 { font-size: 65px; }
-h2 { font-size: 55px; }
-h3 { font-size: 45px; }
-h4 { font-size: 20px; }
-h6 { 
+
+h1 {
+  font-size: 65px;
+}
+
+h2 {
+  font-size: 55px;
+}
+
+h3 {
+  font-size: 45px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
+h6 {
   font-size: 20px;
   margin-left: 3px;
   display: inline-block;
- }
- h1, h2, h3 {
+}
+
+h1, h2, h3 {
   color: rgb(254, 252, 62);
   text-shadow: none;
 }
 
-.row { 
-  margin-right: 0; margin-left: 0;
+.row {
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .jumbotron {
@@ -69,9 +78,11 @@ nav {
 #btn-back {
   width: 250px;
 }
-#btn-startover { 
+
+#btn-startover {
   width: 250px;
 }
+
 #btn-best {
   color: rgb(254, 252, 62);
 }
@@ -112,7 +123,6 @@ nav {
 
 #footer {
   position: relative;
-  
   width: 100%;
   /* Set the fixed height of the footer here */
   text-align: center;
@@ -121,7 +131,7 @@ nav {
   padding-bottom: 10px;
 }
 
-#login-screen, #craving-select-screen, #splash-screen, #results-screen, #add-review{
+#login-screen, #craving-select-screen, #splash-screen, #results-screen, #add-review {
   position: relative;
   left: 0;
   top: 0;
@@ -240,13 +250,25 @@ nav {
   margin: 10px;
 }
 
+.img-thumbnail {
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    border: 5px solid white;
+}
+
+.img-thumbnail::before {
+    padding-top: 100%;
+    display: block;
+    content: "";
+}
+
 
 /*Extra small devices (portrait phones, less than 576px)
  No media query since this is the default in Bootstrap*/
 
 
 /*Small devices (landscape phones, 576px and up)*/
-
 
 @media (min-width: 576px) {
   #title {
