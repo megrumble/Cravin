@@ -258,7 +258,10 @@ nav {
   h3 {
     font-size: 35px;
   }
-  }
+  #navbtn {
+  display: inline-block;
+ } 
+
 }
 
 
@@ -268,7 +271,6 @@ nav {
   #title {
     font-size: 115px;
   }
-}
 
 
 /*Large devices (desktops, 992px and up)*/
