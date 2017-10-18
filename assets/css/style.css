@@ -282,7 +282,15 @@ nav {
   h3 {
     font-size: 35px;
   }
+<<<<<<< HEAD
+  #navbtn {
+  display: inline-block;
+ } 
+
+}
+=======
 }  
+>>>>>>> fbc4f7a5f5fd2b56ecc34e93a6e847e1425db105
 
 #person-img {
   float: right;
@@ -295,7 +303,6 @@ nav {
   #title {
     font-size: 115px;
   }
-}
 
 /*Large devices (desktops, 992px and up)*/
 @media (min-width: 992px) {
