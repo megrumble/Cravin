@@ -1,314 +1,318 @@
-      @font-face {
-      font-family: 'Heavitas';
-      src: url('../fonts/heavitas-webfont.woff2') format('woff2'), url('../fonts/heavitas-webfont.woff') format('woff'), url('../fonts/Heavitas.ttf') format('woff');
-      font-weight: normal;
-      font-style: normal;
-    }
+              @font-face {
+              font-family: 'Heavitas';
+              src: url('../fonts/heavitas-webfont.woff2') format('woff2'), url('../fonts/heavitas-webfont.woff') format('woff'), url('../fonts/Heavitas.ttf') format('woff');
+              font-weight: normal;
+              font-style: normal;
+            }
 
-    html {
-      overflow-y: scroll;
-      overflow-x: hidden;
-    }
+            html {
+              overflow-y: scroll;
+              overflow-x: hidden;
+            }
 
-    body {
-      min-height: calc(100vh + 60);
-      background-repeat: no-repeat;
-      font-family: Heavitas, impact, helvetica;
-      background-color: red;
-      background: linear-gradient(red, rgb(140, 10, 10));
-      -webkit-background: linear-gradient(red, rgb(140, 10, 10));
-      -ms-background: linear-gradient(red, black);
-      -o-background: linear-gradient(red, black);
-      /*text-shadow: -1px -1px 0 #f70, 1px -1px 0 #f70, -1px 1px 0 #f70, 1px 1px 0 #f70;*/
-      /*text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;*/
-    }
+            body {
+              min-height: calc(100vh + 60);
+              background-repeat: no-repeat;
+              font-family: Heavitas, impact, helvetica;
+              background-color: red;
+              background: linear-gradient(red, rgb(140, 10, 10));
+              -webkit-background: linear-gradient(red, rgb(140, 10, 10));
+              -ms-background: linear-gradient(red, black);
+              -o-background: linear-gradient(red, black);
+              /*text-shadow: -1px -1px 0 #f70, 1px -1px 0 #f70, -1px 1px 0 #f70, 1px 1px 0 #f70;*/
+              /*text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;*/
+            }
 
-    #wrapper-background {
-      height: 100%;
-    }
+            #wrapper-background {
+              height: 100%;
+            }
 
-    a {
-      text-shadow: none;
-      color: black;
-    }
+            a {
+              text-shadow: none;
+              color: black;
+            }
 
-    h1 {
-      font-size: 65px;
-    }
+            h1 {
+              font-size: 65px;
+            }
 
-    h2 {
-      font-size: 55px;
-    }
+            h2 {
+              font-size: 55px;
+            }
 
-    h3 {
-      font-size: 45px;
-    }
+            h3 {
+              font-size: 45px;
+            }
 
-    h4 {
-      font-size: 20px;
-    }
+            h4 {
+              font-size: 20px;
+            }
 
-    h6 {
-      font-size: 20px;
-      margin-left: 3px;
-      display: inline-block;
-    }
+            h6 {
+              font-size: 20px;
+              margin-left: 3px;
+              display: inline-block;
+            }
 
-    h1,
-    h2,
-    h3 {
-      color: rgb(254, 252, 62);
-      text-shadow: none;
-    }
+            h1,
+            h2,
+            h3 {
+              color: rgb(254, 252, 62);
+              text-shadow: none;
+            }
 
-    .row {
-      margin-right: 0;
-      margin-left: 0;
-    }
+            .row {
+              margin-right: 0;
+              margin-left: 0;
+            }
 
-    .jumbotron {
-      padding-top: 20px;
-      padding-bottom: 34px;
-      background-color: transparent;
-      margin: 0px;
-    }
+            .jumbotron {
+              padding-top: 20px;
+              padding-bottom: 34px;
+              background-color: transparent;
+              margin: 0px;
+            }
 
-    nav {
-      background-color: #000;
-    }
+            nav {
+              background-color: #000;
+            }
 
-    #btn-back,
-    #btn-submit-review,
-    #btn-clear-review,
-    #btn-startover {
-      width: 220px;
-      margin: 10px auto;
-      color: rgb(254, 252, 62);
-    }
+            #btn-back,
+            #btn-submit-review,
+            #btn-clear-review,
+            #btn-startover {
+              width: 220px;
+              margin: 10px auto;
+              color: rgb(254, 252, 62);
+            }
 
-    #btn-best {
-      color: rgb(254, 252, 62);
-    }
+            #btn-best {
+              color: rgb(254, 252, 62);
+            }
 
-    #btn-fast {
-      color: rgb(254, 252, 62);
-    }
+            #btn-fast {
+              color: rgb(254, 252, 62);
+            }
 
-    .navbtn {
-      color: black;
-    }
+            .navbtn {
+              color: black;
+            }
 
-    .navbar-brand {
-      color: rgb(254, 252, 62);
-      margin-left: 3px;
-    }
+            .modal-content {
+              background-color: rgb(254, 252, 62);
+            }
 
-    #awning {
-      background-image: url();
-    }
+            .navbar-brand {
+              color: rgb(254, 252, 62);
+              margin-left: 3px;
+            }
 
-    .dropdown {
-      text-align: right;
-    }
+            #awning {
+              background-image: url();
+            }
 
-    .container {
-      text-align: center;
-    }
+            .dropdown {
+              text-align: right;
+            }
 
-    #title {
-      font-size: 65px;
-    }
+            .container {
+              text-align: center;
+            }
 
-    .wrapper {
-      text-align: center;
-      margin: 15px;
-    }
+            #title {
+              font-size: 65px;
+            }
 
-    #footer {
-      position: relative;
-      width: 100%;
-      /* Set the fixed height of the footer here */
-      text-align: center;
-      height: auto;
-      letter-spacing: 5px;
-      padding-bottom: 10px;
-    }
+            .wrapper {
+              text-align: center;
+              margin: 15px;
+            }
 
-    #login-screen,
-    #craving-select-screen,
-    #splash-screen,
-    #results-screen,
-    #add-review {
-      position: relative;
-      left: 0;
-      top: 0;
-      width: 100%;
-      min-height: 85vh;
-      display: none;
-      opacity: 0;
-    }
+            #footer {
+              position: relative;
+              width: 100%;
+              /* Set the fixed height of the footer here */
+              text-align: center;
+              height: auto;
+              letter-spacing: 5px;
+              padding-bottom: 10px;
+            }
 
-    #splash-screen {
-      display: block;
-      opacity: 1;
-    }
+            #login-screen,
+            #craving-select-screen,
+            #splash-screen,
+            #results-screen,
+            #add-review {
+              position: relative;
+              left: 0;
+              top: 0;
+              width: 100%;
+              min-height: 85vh;
+              display: none;
+              opacity: 0;
+            }
 
-    #btn-sign-in {
-      display: block;
-      margin: 0 auto;
-      margin-top: 10px;
-    }
+            #splash-screen {
+              display: block;
+              opacity: 1;
+            }
 
-    #loading-screen {
-      display: none;
-      position: absolute;
-      left: 0;
-      top: 0;
-      width: 100vw;
-      min-height: 100vh;
-      height: 100%;
-      background-color: rgba(0, 0, 0, .7);
-      z-index: 99999;
-    }
+            #btn-sign-in {
+              display: block;
+              margin: 0 auto;
+              margin-top: 10px;
+            }
 
-    .loading-icon {
-      position: fixed;
-      color: orange;
-      margin-left: calc((100vw / 2) - 40px);
-      margin-top: calc((100vh / 2) - 10px);
-    }
+            #loading-screen {
+              display: none;
+              position: absolute;
+              left: 0;
+              top: 0;
+              width: 100vw;
+              min-height: 100vh;
+              height: 100%;
+              background-color: rgba(0, 0, 0, .7);
+              z-index: 99999;
+            }
 
-    .craving-buttons {
-      margin-top: 20px;
-    }
+            .loading-icon {
+              position: fixed;
+              color: orange;
+              margin-left: calc((100vw / 2) - 40px);
+              margin-top: calc((100vh / 2) - 10px);
+            }
 
-    .craving-buttons-group {
-      margin-top: 20px;
-      margin-bottom: 20px;
-    }
+            .craving-buttons {
+              margin-top: 20px;
+            }
 
-    .craving-buttons-group a {
-      display: block;
-      margin: 10px auto;
-    }
+            .craving-buttons-group {
+              margin-top: 20px;
+              margin-bottom: 20px;
+            }
 
-    .show-cravings {
-      margin: 0 auto;
-    }
+            .craving-buttons-group a {
+              display: block;
+              margin: 10px auto;
+            }
 
-    .results-box {
-      border-radius: 10px;
-      background-color: darkred;
-      box-shadow: inset 0 0 10px #000;
-      padding: 20px;
-      margin-top: 15px;
-      color: black;
-      text-shadow: none;
-    }
+            .show-cravings {
+              margin: 0 auto;
+            }
 
-    .results-image {
-      max-width: 300px;
-      height: auto;
-      /*float: left;*/
-      margin-right: 10px;
-    }
+            .results-box {
+              border-radius: 10px;
+              background-color: darkred;
+              box-shadow: inset 0 0 10px #000;
+              padding: 20px;
+              margin-top: 15px;
+              color: black;
+              text-shadow: none;
+            }
 
-    .craving-box {
-      height: 175px;
-      background-size: contain;
-      background-repeat: no-repeat;
-      background-position: center center;
-      z-index: 10;
-      margin: 20px;
-    }
+            .results-image {
+              max-width: 300px;
+              height: auto;
+              /*float: left;*/
+              margin-right: 10px;
+            }
 
-    .craving-check {
-      color: yellow;
-      text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
-    }
+            .craving-box {
+              height: 175px;
+              background-size: contain;
+              background-repeat: no-repeat;
+              background-position: center center;
+              z-index: 10;
+              margin: 20px;
+            }
 
-    .craving-check-wrapper {
-      display: block;
-      margin-left: 25%;
-      display: none;
-    }
+            .craving-check {
+              color: yellow;
+              text-shadow: -3px -3px 0 #000, 3px -3px 0 #000, -3px 3px 0 #000, 3px 3px 0 #000;
+            }
 
-    .burger-craving-box {
-      background-image: url('../images/burger.png');
-    }
+            .craving-check-wrapper {
+              display: block;
+              margin-left: 25%;
+              display: none;
+            }
 
-    .taco-craving-box {
-      background-image: url('../images/taco.png');
-    }
+            .burger-craving-box {
+              background-image: url('../images/burger.png');
+            }
 
-    .salad-craving-box {
-      background-image: url('../images/salad.png');
-    }
+            .taco-craving-box {
+              background-image: url('../images/taco.png');
+            }
 
-    .pie-craving-box {
-      background-image: url('../images/pizza.png');
-    }
+            .salad-craving-box {
+              background-image: url('../images/salad.png');
+            }
 
-    .restaurant-info {
-      text-align: left;
-    }
+            .pie-craving-box {
+              background-image: url('../images/pizza.png');
+            }
 
-    .navbar-brand {
-      margin: 10px;
-    }
+            .restaurant-info {
+              text-align: left;
+            }
 
-    .img-thumbnail {
-      width: 100%;
-      height: auto;
-      background-size: cover;
-      background-position: center;
-      border: 5px solid white;
-    }
+            .navbar-brand {
+              margin: 10px;
+            }
 
-    .img-thumbnail::before {
-      padding-top: 100%;
-      display: block;
-      content: "";
-    }
-    /*Extra small devices (portrait phones, less than 576px)
+            .img-thumbnail {
+              width: 100%;
+              height: auto;
+              background-size: cover;
+              background-position: center;
+              border: 5px solid white;
+            }
+
+            .img-thumbnail::before {
+              padding-top: 100%;
+              display: block;
+              content: "";
+            }
+            /*Extra small devices (portrait phones, less than 576px)
  No media query since this is the default in Bootstrap*/
-    /*Small devices (landscape phones, 576px and up)*/
+            /*Small devices (landscape phones, 576px and up)*/
 
-    @media (max-width: 576px) {
-      #title {
-        font-size: 55px;
-      }
-      h1 {
-        font-size: 55px;
-      }
-      h3 {
-        font-size: 35px;
-      }
-      #navbtn {
-        display: inline-block;
-      }
-    }
+            @media (max-width: 576px) {
+              #title {
+                font-size: 55px;
+              }
+              h1 {
+                font-size: 55px;
+              }
+              h3 {
+                font-size: 35px;
+              }
+              #navbtn {
+                display: inline-block;
+              }
+            }
 
-    #person-img {
-      float: right;
-      width: 50px;
-      border-radius: 50%;
-    }
-    /*Medium devices (tablets, 768px and up)*/
+            #person-img {
+              float: right;
+              width: 50px;
+              border-radius: 50%;
+            }
+            /*Medium devices (tablets, 768px and up)*/
 
-    @media (min-width: 768px) {
-      #title {
-        font-size: 115px;
-      }
-      /*Large devices (desktops, 992px and up)*/
-      @media (min-width: 992px) {
-        #title {
-          font-size: 175px;
-        }
-      }
-      /*Extra large devices (large desktops, 1200px and up)*/
-      @media (min-width: 1200px) {
-        #title {
-          font-size: 200px;
-        }
-      }
+            @media (min-width: 768px) {
+              #title {
+                font-size: 115px;
+              }
+              /*Large devices (desktops, 992px and up)*/
+              @media (min-width: 992px) {
+                #title {
+                  font-size: 175px;
+                }
+              }
+              /*Extra large devices (large desktops, 1200px and up)*/
+              @media (min-width: 1200px) {
+                #title {
+                  font-size: 200px;
+                }
+              }
