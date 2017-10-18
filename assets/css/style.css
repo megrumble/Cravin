@@ -16,13 +16,13 @@ body {
   background-repeat: no-repeat;
   font-family: Heavitas, impact, helvetica;
   background-color: red;
-  background: linear-gradient(red, black);
-  -webkit-background: linear-gradient(red, black);
+  background: linear-gradient(red, rgb(140, 10,10));
+  -webkit-background: linear-gradient(red, rgb(140, 10,10));
   -ms-background: linear-gradient(red, black);
   -o-background: linear-gradient(red, black);
   
   /*text-shadow: -1px -1px 0 #f70, 1px -1px 0 #f70, -1px 1px 0 #f70, 1px 1px 0 #f70;*/
-  text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
+  //text-shadow: -1px 0 yellow, 0 1px yellow, 1px 0 yellow, 0 -1px yellow;
 }
 
 
