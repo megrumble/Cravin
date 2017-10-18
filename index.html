@@ -76,24 +76,24 @@
     <div class="container">
       <h3>Select your craving.</h3>
       <div class="row show-cravings justify-content-center">
-        <div class="col-6 col-md-4 craving-box burger-craving-box" data-craving-id="168">
+        <div class="col-4 col-md-4 craving-box burger-craving-box" data-craving-id="168">
           <div class="craving-check-wrapper">
             <i class="fa fa-check fa-5x craving-check"></i>
           </div>
         </div>
-        <div class="col-6 col-md-4 craving-box taco-craving-box" data-craving-id="997">
+        <div class="col-4 col-md-4 craving-box taco-craving-box" data-craving-id="997">
           <div class="craving-check-wrapper">
             <i class="fa fa-check fa-5x craving-check"></i>
           </div>
         </div>
       </div>
       <div class="row show-cravings justify-content-center">
-        <div class="col-6 col-md-4 craving-box salad-craving-box" data-craving-id="998">
+        <div class="col-4 col-md-4 craving-box salad-craving-box" data-craving-id="998">
           <div class="craving-check-wrapper">
             <i class="fa fa-check fa-5x craving-check"></i>
           </div>
         </div>
-        <div class="col-6 col-md-4 craving-box pie-craving-box" data-craving-id="82">
+        <div class="col-4 col-md-4 craving-box pie-craving-box" data-craving-id="82">
           <div class="craving-check-wrapper">
             <i class="fa fa-check fa-5x craving-check"></i>
           </div>
@@ -140,14 +140,18 @@
 
 
 
-  <div id="add-review">
-    <h3>Add a review for <span id="rest-review-name"></span></h3>
-    <div class="row">
-      <div class="col-12">
-        <textarea id="user-reviewer-text"></textarea>
+  <div id="add-review" class="row justify-content-center">
+    <div class="container">
+      <h3>Add a review for
+        <span id="rest-review-name"></span>
+      </h3>
+      <div class="row">
+        <div class="col-12">
+          <textarea id="user-review-text" rows="10" class="form-control"></textarea>
+        </div>
+        <a href="#" id="btn-submit-review" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
+        <a href="#" id="btn-clear-review" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
       </div>
-      <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
-      <a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
     </div>
   </div>
 
@@ -178,8 +182,8 @@
         <div class="modal-header">
           <h5 id="yes-no-title" class="modal-title"></h5>
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
+            <span aria-hidden="true">&times;</span>
+          </button>
         </div>
         <div class="modal-body">
           <p id="yes-no-body"></p>
@@ -213,14 +217,11 @@
     <h6> Copyright &copy; 2017 </h6>
   </div>
   <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-  <script src="assets/js/tinymce/jquery.tinymce.min.js"></script>
-
   <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4"
     crossorigin="anonymous"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1"
     crossorigin="anonymous"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/1.20.3/TweenMax.min.js"></script>
-
   <script src="assets/js/app.js"></script>
 </body>
 
