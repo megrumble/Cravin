@@ -33,7 +33,7 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 function Review(uid, text) {
     this.uid = uid;
-    
+
     this.text = text;
 };
 // User object
@@ -47,13 +47,12 @@ function User(uid, name, email, photoURL) {
     this.currentState = "";
     this.cities = [];
     this.restaurants = [];
-    
     this.userHasEaten = false;
     this.lastRestaurantId = "";
 };
 
 // Restaurant object
-function Restaurant(id, name, address, lat, lon, thumb, price_range, average_cost, featured_image, rating_text) {
+function Restaurant(id, name, address, lat, lon, thumb, price_range, average_cost, featured_image, rating_text, aggregate_rating) {
     this.id = id;
     this.name = name;
     this.address = address;
@@ -67,6 +66,7 @@ function Restaurant(id, name, address, lat, lon, thumb, price_range, average_cos
     this.average_cost = average_cost;
     this.featured_image = featured_image;
     this.rating_text = rating_text;
+    this.aggregate_rating = aggregate_rating;
     this.yelpId = 0;
     this.yelpReviews = [];
     this.userReviews = [];
@@ -121,6 +121,12 @@ function distance(lat1, lon1, lat2, lon2) {
     var milesAway = (12742 * Math.asin(Math.sqrt(a))) / 1.609344;
     return (milesAway).toFixed(1); // 2 * R; R = 6371 km
 }
+/*window.onload=(function() {
+    var burgTop = $("#food1").offset().top;
+    $("#food1").offset().top -= 120;
+    var burg = document.getElementById("food1");
+    //TweenMax.to(burg, 1, { y:60 })
+})*/
 
 $(document).ready(function () {
     // App instance
@@ -140,23 +146,20 @@ $(document).ready(function () {
         currentCraving: 0,
         // Function to sort restaurant array by distance
         sortByDistance: function (a, b) {
-            if (a.distance < b.distance) {
-                return -1;
-            }
-            if (a.distance > b.distance) {
-                return 1;
-            }
-            return 0;
+            return a.distance < b.distance ? -1 : (a.distance > b.distance) ? 1 : 0;
         },
         // Function to sort restaurant array by quality
+        // If two qualities match, we sort by distance instead.
         sortByQuality: function (a, b) {
-            if (a.rating_text < b.rating_text) {
-                return -1;
+            aQual = a.aggregate_rating;
+            bQual = b.aggregate_rating;
+            aDist = a.distance;
+            bDist = b.distance;
+            if(aQual === bQual) {
+                return aDist < bDist ? -1 : (aDist > bDist) ? 1 : 0;
+            } else {
+                return aQual < bQual ? -1 : (aQual > bQual) ? 1 : 0;
             }
-            if (a.rating_text > b.rating_text) {
-                return 1;
-            }
-            return 0;
         },
         // Generic function to make Ajax call
         callApi: function (type, url, headers, callback) {
@@ -328,17 +331,30 @@ $(document).ready(function () {
             app.showLoadingScreen();
             // Bu
             var callUrl = `${ apiUrls.zomatoBase }/search?lat=${ app.latLong[0] }&lon=${ app.latLong[1] }&cuisines=${ app.currentCraving }&radius=3000`;
+            var hidePrev = $("#chk-hide-previous").is(":checked");
+            
             app.restaurantResults.length = 0;
 
             app.callApi("get", callUrl, apiKeys.zomato.header, function (response) {
                 for (var i = 0; i < response.restaurants.length; i++) {
                     var rest = response.restaurants[i].restaurant;
-                    console.log(rest);
                     var newRestaurant = new Restaurant(rest.id, rest.name, rest.location.address, rest.location.latitude, rest.location.longitude,
-                        rest.thumb, rest.price_range, rest.average_cost_for_two, rest.featured_image, rest.user_rating.rating_text);
+                        rest.thumb, rest.price_range, rest.average_cost_for_two, rest.featured_image, rest.user_rating.rating_text, rest.user_rating.aggregate_rating);
 
                     newRestaurant.distance = parseFloat(distance(app.latLong[0], app.latLong[1], newRestaurant.lat, newRestaurant.lon));
-                    app.restaurantResults.push(newRestaurant);
+                    var canPush = true;
+                    if (hidePrev) {
+                        if (app.currentUser.restaurants) {
+                            for (var j = 0; j < app.currentUser.restaurants.length; j++) {
+                                if (newRestaurant.id === app.currentUser.restaurants[j]) {
+                                    canPush = false;
+                                }
+                            }
+                        }
+                    }
+                    if (canPush) {
+                        app.restaurantResults.push(newRestaurant);
+                    }
                 };
                 if (type === "fast") {
                     app.restaurantResults.sort(app.sortByDistance);
@@ -388,7 +404,7 @@ $(document).ready(function () {
             app.switchScreens(app.currentScreen, lastScreen, false);
 
         },
-        writeCurrentUser: function() {
+        writeCurrentUser: function () {
             database.ref(getUsrDataLoc(app.currentUser.uid)).update(app.currentUser);
         },
         openReviewPage: function (currPage) {
@@ -396,9 +412,10 @@ $(document).ready(function () {
             app.switchScreens(app.currentScreen, "#add-review", true);
         },
         eventListeners: function () {
-            window.onpopstate = function (event) {
-                app.backButton();
-            };
+            $("#btn-home-burger").on("click", function (e) {
+                e.preventDefault();
+                app.switchScreens(app.currentScreen, "#craving-select-screen", true)
+            });
             $("#btn-sign-out").on("click", function () {
                 firebase.auth().signOut().then(function () {
                     $("#btn-sign-in").css("display", "block");
@@ -407,19 +424,12 @@ $(document).ready(function () {
                     // An error happened.
                 });
             });
-            $(document).on("click", ".go-to-restaurant", function (e) {
-                e.preventDefault();
-                app.addRestuarantToDb(parseInt($(this).attr("data-index")));
-                app.openReviewPage("#results-screen");
-                window.open($(this).attr("href"));
-
-            });
-            $("#btn-submit-review").on('click', function() {
+            $("#btn-submit-review").on('click', function () {
                 var text = $("#user-review-text").val();
                 console.log(text);
-                if(text != "") {
+                if (text != "") {
                     var review = new Review(app.currentUser.uid, text);
-                    if(!app.selectedRestaurant.userReviews) {
+                    if (!app.selectedRestaurant.userReviews) {
                         app.selectedRestaurant.userReviews = [];
                     }
                     app.selectedRestaurant.userReviews.push(review);
@@ -427,6 +437,9 @@ $(document).ready(function () {
                     app.currentUser.lastRestaurantId = "";
                     app.currentUser.userHasEaten = false;
                     app.writeCurrentUser();
+                    app.switchScreens(app.currentScreen, "#craving-select-screen", false, function() {
+                        app.showAlert("Thank You!", "Thank you so much for leaving a review!");
+                    });
                 } else {
                     app.showAlert("You cannot submit a blank review!");
                 }
@@ -459,16 +472,14 @@ $(document).ready(function () {
                 $("#yes-no-modal").modal('hide');
                 app.openReviewPage(app.currentScreen);
             });
-            firebase.auth().getRedirectResult().then(function (result) {
-                if (result.credential) {
-                    var token = result.credential.accessToken;
-                }
-                console.log(result);
-                app.currentUser = result.user;
-                if (result.user != null) {
+            $(document).on("click", ".go-to-restaurant", function (e) {
+                e.preventDefault();
+                app.addRestuarantToDb(parseInt($(this).attr("data-index")));
+                app.openReviewPage("#results-screen");
+                window.open($(this).attr("href"));
 
-                }
             });
+
             $(".craving-box").on("click", function () {
                 app.currentCraving = $(this).attr("data-craving-id");
                 $(".craving-box").each(function () {
@@ -476,11 +487,23 @@ $(document).ready(function () {
                 });
                 $(this).find('.craving-check-wrapper').css("display", "block");
             });
-
+            firebase.auth().getRedirectResult().then(function (result) {
+                if (result.credential) {
+                    var token = result.credential.accessToken;
+                }
+                database.ref(getUsrDataLoc(result.user.uid)).once("value", function (snapshot) {
+                    app.currentUser = snapshot.val();
+                    if (!app.currentUser) {
+                        app.currentUser = new User(result.user.uid, result.user.displayName, result.user.email, result.user.photoURL);
+                        app.writeCurrentUser();
+                    }
+                });
+                app.switchScreens(app.currentScreen, "#craving-select-screen");
+            });
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
                     var showModal = false;
-                    //app.currentUser = user;
+                    app.currentUser = user;
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(function (position) {
                             app.latLong = [position.coords.latitude, position.coords.longitude];
@@ -502,7 +525,6 @@ $(document).ready(function () {
                             app.currentUser = userData;
                             if (app.currentUser.userHasEaten) {
                                 database.ref(getRestDataLoc(app.currentUser.lastRestaurantId)).once("value", function (restSnap) {
-
                                     app.selectedRestaurant = restSnap.val();
                                     showModal = true;
                                 });
@@ -512,7 +534,7 @@ $(document).ready(function () {
                     });
 
                     // GO TO THE NEXT PAGE
-                    app.switchScreens("#login-screen", "#craving-select-screen", false, function () {
+                    app.switchScreens(app.currentScreen, "#craving-select-screen", false, function () {
                         if (showModal) {
                             app.showYesNo('Welcome Back, ' + user.displayName,
                                 `You recently satisfied a craving at ${ app.selectedRestaurant.name }!  Would you like to leave a review about your experience?`);
@@ -522,22 +544,16 @@ $(document).ready(function () {
                     $("#btn-sign-in").css("display", "block");
                 }
             });
-
         },
 
     }
-    //Burger Animation
     
-    window.onload=(function() {
-        var top = $("#food1").top();
-        var burg = document.getElementById("food1");
-        TweenMax.to(burg, 1, {y: top})
-    })
-    /*
-    tinymce.init({
-        selector: "#user-review-text",
-        cache_suffix: '?=v4.1.6'
-    });*/
+    // Catch the browser's back button event to perform our own back-effect (if it exists in window.history)
+    window.onpopstate = function (event) {
+        app.backButton();
+    };
+
+    
     setTimeout(function () {
         app.switchScreens("#splash-screen", "#login-screen", true);
         app.eventListeners();

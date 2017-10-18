@@ -1,4 +1,5 @@
-    @font-face {
+
+  @font-face {
     font-family: 'Heavitas';
     src: url('../fonts/heavitas-webfont.woff2') format('woff2'), url('../fonts/heavitas-webfont.woff') format('woff'), url('../fonts/Heavitas.ttf') format('woff');
     font-weight: normal;

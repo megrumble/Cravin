@@ -26,13 +26,17 @@
   </div>
 
   <nav class="navbar navbar-inverse bg-inverse" class="navy">
-    <!-- <a class="navbar-brand" href="" id="btn-home">
+    <div class="container">
+      <!-- <a class="navbar-brand" href="" id="btn-home">
          <img src="assets/images/burger.png" width="35" class="d-inline-block" alt="">
            <h6>CRAVIN'</h6>
        </a> -->
-    <a href="index.html"><img src="../assets/images/burger.png" width="55px" /> </a>
-    <div class="mr-auto">
-      <img id="person-img" class="d-inline-block" />
+      <a href="" id="btn-home-burger">
+        <img src="../assets/images/burger.png" width="55px" />
+      </a>
+      <span class="navbar-text">
+        <img id="person-img" class="d-inline-block" />
+      </span>
     </div>
   </nav>
 
@@ -106,6 +110,9 @@
         <div class="craving-buttons-group">
           <div class="row justify-content-center">
             <div class="col-12 col-lg-4">
+              <label for="chk-hide-previous" class="checkbox-text">Hide your previously visited restaurants?</label>
+              <input type="checkbox" id="chk-hide-previous">
+              <br />
               <a href="" id="btn-best" class="btn btn-dark btn-large">Get the best!</a>
             </div>
           </div>
@@ -151,8 +158,10 @@
         <div class="col-12">
           <textarea id="user-review-text" rows="10" class="form-control"></textarea>
         </div>
-        <a href="#" id="btn-submit-review" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
-        <a href="#" id="btn-clear-review" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
+        <div class="input-group">
+          <a href="#" id="btn-submit-review" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
+          <a href="#" id="btn-clear-review" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
+        </div>
       </div>
     </div>
   </div>
