@@ -133,6 +133,7 @@ $(document).ready(function () {
         // Our current user object
         currentUser: null,
         // Our current craving identitfier
+        selectedRestaurant: null,
         currentCraving: 0,
         // Function to sort restaurant array by distance
         sortByDistance: function (a, b) {
@@ -349,6 +350,7 @@ $(document).ready(function () {
             var restaurant = app.restaurantResults[idx];
             var dbRestLoc = getRestDataLoc(restaurant.id);
             var dbUsrLoc = getUsrDataLoc(app.currentUser.uid);
+            app.selectedRestaurant = restaurant;
             database.ref(dbUsrLoc).once("value", function (usrSnap) {
                 var user = usrSnap.val();
                 database.ref(dbRestLoc).once("value", function (snapshot) {
@@ -381,6 +383,10 @@ $(document).ready(function () {
             app.switchScreens(app.currentScreen, lastScreen, false);
 
         },
+        openReviewPage: function(currPage) {
+            $("#rest-review-name").text(app.selectedRestaurant.name);   
+            app.switchScreens(app.currentScreen, "#add-review", true);            
+        },
         eventListeners: function () {
             window.onpopstate = function (event) {
                 app.backButton();
@@ -396,6 +402,7 @@ $(document).ready(function () {
             $(document).on("click", ".go-to-restaurant", function (e) {
                 e.preventDefault();
                 app.addRestuarantToDb(parseInt($(this).attr("data-index")));
+                app.openReviewPage("#results-screen");
                 window.open($(this).attr("href"));
 
             });
@@ -423,7 +430,9 @@ $(document).ready(function () {
             $("#btn-sign-in").on("click", function () {
                 firebase.auth().signInWithRedirect(provider);
             });
-
+            $("#btn-yes").on("click", function() {
+                app.openReviewPage(app.currentScreen);
+            });
             firebase.auth().getRedirectResult().then(function (result) {
                 if (result.credential) {
                     var token = result.credential.accessToken;
@@ -451,6 +460,7 @@ $(document).ready(function () {
             firebase.auth().onAuthStateChanged(function (user) {
 
                 if (user) {
+                    var showModel = false;
                     //app.currentUser = user;
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(function (position) {
@@ -467,14 +477,19 @@ $(document).ready(function () {
                         app.currentUser = usrSnap.val();
                         if (app.currentUser.userHasEaten) {
                             database.ref(getRestDataLoc(app.currentUser.lastRestaurantId)).once("value", function (restSnap) {
-                                var restData = restSnap.val();
-                                app.showYesNo('Welcome Back, ' + user.displayName,
-                                    `You recently satisfied a craving at ${ restData.name }!  Would you like to leave a review about your experience?`);
+                                
+                                app.selectedRestaurant = restSnap.val();
+                                showModal = true;
                             });
                         }
                     });
                     // GO TO THE NEXT PAGE
-                    app.switchScreens("#login-screen", "#craving-select-screen", false);
+                    app.switchScreens("#login-screen", "#craving-select-screen", false, function() {
+                        if(showModal) {
+                            app.showYesNo('Welcome Back, ' + user.displayName,
+                            `You recently satisfied a craving at ${ app.selectedRestaurant.name }!  Would you like to leave a review about your experience?`);
+                        }
+                    });
                 } else {
                     $("#btn-sign-in").css("display", "block");
                 }
@@ -483,7 +498,10 @@ $(document).ready(function () {
         },
 
     }
-
+    tinymce.init({
+        selector: "#user-review-text",
+        cache_suffix: '?=v4.1.6'
+    });
     setTimeout(function () {
         app.switchScreens("#splash-screen", "#login-screen", true);
         app.eventListeners();
