@@ -88,9 +88,11 @@ var apiKeys = {
 };
 
 //Burger Animation
-window.onload=(function() {
+window.onload = (function () {
     var burg = document.getElementById("food1");
-    TweenMax.to(burg, 1, {y:60})
+    TweenMax.to(burg, 1, {
+        y: 60
+    })
 })
 
 
@@ -238,7 +240,9 @@ $(document).ready(function () {
                 app.lastScreens.push(closeId);
             }
             // Animate the closing, and change the CSS
-            $(closeId).animate({ opacity: 0 }, 500, function () { 
+            $(closeId).animate({
+                opacity: 0
+            }, 500, function () {
                 $(openId).css({
                     "display": "block",
                     "min-height": "85vh",
@@ -281,9 +285,9 @@ $(document).ready(function () {
                 var priceRange = "";
                 var rest = app.restaurantResults[i];
                 var image;
-                if(rest.featured_image !== "") {
-                    image = rest.featured_image; 
-                } else if(rest.thumb !== "") {
+                if (rest.featured_image !== "") {
+                    image = rest.featured_image;
+                } else if (rest.thumb !== "") {
                     image = rest.thumb;
                 } else {
                     image = "../assets/images/noimage.png";
@@ -436,6 +440,7 @@ $(document).ready(function () {
                     var token = result.credential.accessToken;
                 }
                 app.currentUser = result.user;
+                console.log(result);
                 if (result.user != null) {
 
                     database.ref(getUsrDataLoc(app.currentUser.uid)).once("value", function (snapshot) {
