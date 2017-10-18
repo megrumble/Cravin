@@ -46,16 +46,10 @@
     <!-- Loading Animation to Go Here -->
 
     <!-- Image of Burger Goes Here -->
-  <div id="food1">
-    <img id="burger" src="assets/images/burger.png" class="img-fluid" alt="Responsive image">
+    <div id="food1">
+      <img id="burger" src="assets/images/burger.png" class="img-fluid" alt="Responsive image">
+    </div>
   </div>
-<<<<<<< HEAD
-
-
-
-=======
-  </div>
->>>>>>> master
   <div id="login-screen" class="wrapper">
     <div class="jumbotron jumbotron-fluid">
       <h1 class="text-center"> Sign in to Cravin' </h1>
@@ -150,13 +144,15 @@
 
   <div id="add-review" class="row justify-content-center">
     <div class="container">
-      <h3>Add a review for <span id="rest-review-name"></span></h3>
+      <h3>Add a review for
+        <span id="rest-review-name"></span>
+      </h3>
       <div class="row">
         <div class="col-12">
-          <textarea id="user-review-text"></textarea>
+          <textarea id="user-review-text" rows="10" class="form-control"></textarea>
         </div>
-        <a href="#" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
-        <a href="#" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
+        <a href="#" id="btn-submit-review" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Submit</a>
+        <a href="#" id="btn-clear-review" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Clear</a>
       </div>
     </div>
   </div>

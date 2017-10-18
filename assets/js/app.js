@@ -14,7 +14,6 @@
     Persistent Storage:
         Firebase
 */
-'use strict';
 // FIREBASE CONFIG
 var config = {
     apiKey: "AIzaSyAfZPBHzrGWnwIrnZTZrw8LBet6cKYPIoM",
@@ -32,8 +31,9 @@ var database = firebase.database();
 var provider = new firebase.auth.GoogleAuthProvider();
 
 
-function review(uid, starRating, text) {
+function Review(uid, text) {
     this.uid = uid;
+    
     this.text = text;
 };
 // User object
@@ -47,6 +47,7 @@ function User(uid, name, email, photoURL) {
     this.currentState = "";
     this.cities = [];
     this.restaurants = [];
+    
     this.userHasEaten = false;
     this.lastRestaurantId = "";
 };
@@ -87,11 +88,6 @@ var apiKeys = {
 
 };
 
-//Burger Animation
-window.onload=(function() {
-    var burg = document.getElementById("food1");
-    TweenMax.to(burg, 1, {y:60})
-})
 
 
 // URLs stored for the APIs used.
@@ -239,7 +235,9 @@ $(document).ready(function () {
                 app.lastScreens.push(closeId);
             }
             // Animate the closing, and change the CSS
-            $(closeId).animate({ opacity: 0 }, 500, function () { 
+            $(closeId).animate({
+                opacity: 0
+            }, 500, function () {
                 $(openId).css({
                     "display": "block",
                     "min-height": "85vh",
@@ -282,9 +280,9 @@ $(document).ready(function () {
                 var priceRange = "";
                 var rest = app.restaurantResults[i];
                 var image;
-                if(rest.featured_image !== "") {
-                    image = rest.featured_image; 
-                } else if(rest.thumb !== "") {
+                if (rest.featured_image !== "") {
+                    image = rest.featured_image;
+                } else if (rest.thumb !== "") {
                     image = rest.thumb;
                 } else {
                     image = "../assets/images/noimage.png";
@@ -297,10 +295,10 @@ $(document).ready(function () {
                     <div class="row justify-content-center">    
                         <div class="col-12">
                             <div class="row results-box first-result clearfix">
-                                <div class="col-4">
+                                <div class="col-12 col-md-4">
                                 <img class="results-image img-fluid img-thumbnail" src="${ image }" />
                                 </div>
-                                <div class="col-8">
+                                <div class="col-12 col-md-8">
                                 <div class="restaurant-info">
                                     <h3 class="restaurant-name">${ rest.name }</h3>
                                     <h4>Average Rating: ${ rest.rating_text }</h4>
@@ -390,9 +388,12 @@ $(document).ready(function () {
             app.switchScreens(app.currentScreen, lastScreen, false);
 
         },
-        openReviewPage: function(currPage) {
-            $("#rest-review-name").text(app.selectedRestaurant.name);   
-            app.switchScreens(app.currentScreen, "#add-review", true);            
+        writeCurrentUser: function() {
+            database.ref(getUsrDataLoc(app.currentUser.uid)).update(app.currentUser);
+        },
+        openReviewPage: function (currPage) {
+            $("#rest-review-name").text(app.selectedRestaurant.name);
+            app.switchScreens(app.currentScreen, "#add-review", true);
         },
         eventListeners: function () {
             window.onpopstate = function (event) {
@@ -412,6 +413,23 @@ $(document).ready(function () {
                 app.openReviewPage("#results-screen");
                 window.open($(this).attr("href"));
 
+            });
+            $("#btn-submit-review").on('click', function() {
+                var text = $("#user-review-text").val();
+                console.log(text);
+                if(text != "") {
+                    var review = new Review(app.currentUser.uid, text);
+                    if(!app.selectedRestaurant.userReviews) {
+                        app.selectedRestaurant.userReviews = [];
+                    }
+                    app.selectedRestaurant.userReviews.push(review);
+                    database.ref(getRestDataLoc(app.selectedRestaurant.id)).update(app.selectedRestaurant);
+                    app.currentUser.lastRestaurantId = "";
+                    app.currentUser.userHasEaten = false;
+                    app.writeCurrentUser();
+                } else {
+                    app.showAlert("You cannot submit a blank review!");
+                }
             });
             $("#btn-fast").on('click', function (e) {
                 e.preventDefault();
@@ -437,23 +455,18 @@ $(document).ready(function () {
             $("#btn-sign-in").on("click", function () {
                 firebase.auth().signInWithRedirect(provider);
             });
-            $("#btn-yes").on("click", function() {
+            $("#btn-yes").on("click", function () {
+                $("#yes-no-modal").modal('hide');
                 app.openReviewPage(app.currentScreen);
             });
             firebase.auth().getRedirectResult().then(function (result) {
                 if (result.credential) {
                     var token = result.credential.accessToken;
                 }
+                console.log(result);
                 app.currentUser = result.user;
                 if (result.user != null) {
 
-                    database.ref(getUsrDataLoc(app.currentUser.uid)).once("value", function (snapshot) {
-                        var userData = snapshot.val();
-                        if (!userData) {
-                            app.currentUser = new User(app.currentUser.uid, app.currentUser.displayName, app.currentUser.email, app.currentUser.photoURL);
-                            database.ref(getUsrDataLoc(app.currentUser.uid)).update(app.currentUser);
-                        }
-                    })
                 }
             });
             $(".craving-box").on("click", function () {
@@ -465,9 +478,8 @@ $(document).ready(function () {
             });
 
             firebase.auth().onAuthStateChanged(function (user) {
-
                 if (user) {
-                    var showModel = false;
+                    var showModal = false;
                     //app.currentUser = user;
                     if (navigator.geolocation) {
                         navigator.geolocation.getCurrentPosition(function (position) {
@@ -478,23 +490,32 @@ $(document).ready(function () {
                     } else {
                         app.callApi("get", apiUrls.googleGeoLocation, "", function (response) {
                             app.latLong = [response.location.lat, response.location.lng];
+                            app.getCity();
                         });
                     };
-                    database.ref(getUsrDataLoc(user.uid)).once("value", function (usrSnap) {
-                        app.currentUser = usrSnap.val();
-                        if (app.currentUser.userHasEaten) {
-                            database.ref(getRestDataLoc(app.currentUser.lastRestaurantId)).once("value", function (restSnap) {
-                                
-                                app.selectedRestaurant = restSnap.val();
-                                showModal = true;
-                            });
+                    database.ref(getUsrDataLoc(app.currentUser.uid)).once("value", function (snapshot) {
+                        var userData = snapshot.val();
+                        if (!userData) {
+                            app.currentUser = new User(app.currentUser.uid, app.currentUser.displayName, app.currentUser.email, app.currentUser.photoURL);
+                            app.writeCurrentUser();
+                        } else {
+                            app.currentUser = userData;
+                            if (app.currentUser.userHasEaten) {
+                                database.ref(getRestDataLoc(app.currentUser.lastRestaurantId)).once("value", function (restSnap) {
+
+                                    app.selectedRestaurant = restSnap.val();
+                                    showModal = true;
+                                });
+                            }
                         }
+                        $("#person-img").attr("src", userData.photoURL);
                     });
+
                     // GO TO THE NEXT PAGE
-                    app.switchScreens("#login-screen", "#craving-select-screen", false, function() {
-                        if(showModal) {
+                    app.switchScreens("#login-screen", "#craving-select-screen", false, function () {
+                        if (showModal) {
                             app.showYesNo('Welcome Back, ' + user.displayName,
-                            `You recently satisfied a craving at ${ app.selectedRestaurant.name }!  Would you like to leave a review about your experience?`);
+                                `You recently satisfied a craving at ${ app.selectedRestaurant.name }!  Would you like to leave a review about your experience?`);
                         }
                     });
                 } else {
@@ -505,10 +526,18 @@ $(document).ready(function () {
         },
 
     }
+    //Burger Animation
+    
+    window.onload=(function() {
+        var top = $("#food1").top();
+        var burg = document.getElementById("food1");
+        TweenMax.to(burg, 1, {y: top})
+    })
+    /*
     tinymce.init({
         selector: "#user-review-text",
         cache_suffix: '?=v4.1.6'
-    });
+    });*/
     setTimeout(function () {
         app.switchScreens("#splash-screen", "#login-screen", true);
         app.eventListeners();

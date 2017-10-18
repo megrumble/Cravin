@@ -260,7 +260,11 @@ nav {
   }
   
 }
-
+#person-img {
+  float: right;
+  width: 50px;
+  border-radius: 50%;
+}
 
 /*Medium devices (tablets, 768px and up)*/
 
