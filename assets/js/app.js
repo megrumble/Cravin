@@ -289,7 +289,7 @@ $(document).ready(function () {
             for (var i = 0; i < 3; i++) {
                 var priceRange = "";
                 var rest = app.restaurantResults[i];
-                var image = rest.featuredImage !== "" ? rest.featured_image : rest.thumb !== "" ? rest.thumb : "assets/images/noimage.png";
+                var image = rest.featured_image !== "" ? rest.featured_image : rest.thumb !== "" ? rest.thumb : "assets/images/noimage.png";
                 
                 for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
                     priceRange += "$";
