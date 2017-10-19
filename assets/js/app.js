@@ -161,9 +161,9 @@ $(document).ready(function () {
             aDist = a.distance;
             bDist = b.distance;
             if(aQual === bQual) {
-                return aDist < bDist ? -1 : (aDist > bDist) ? 1 : 0;
+                return aDist > bDist ? -1 : (aDist < bDist) ? 1 : 0;
             } else {
-                return aQual < bQual ? -1 : (aQual > bQual) ? 1 : 0;
+                return aQual > bQual ? -1 : (aQual < bQual) ? 1 : 0;
             }
         },
         // Generic function to make Ajax call
