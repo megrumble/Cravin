@@ -295,7 +295,7 @@ $(document).ready(function () {
                 } else if (rest.thumb !== "") {
                     image = rest.thumb;
                 } else {
-                    image = "assets/images/noimage-white.png";
+                    image = "assets/images/noimage.png";
                 }
                 for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
                     priceRange += "$";
