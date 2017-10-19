@@ -160,7 +160,7 @@ $(document).ready(function () {
             bQual = b.aggregate_rating;
             aDist = a.distance;
             bDist = b.distance;
-            if (aQual === bQual) {
+            if(aQual === bQual) {
                 return aDist > bDist ? -1 : (aDist < bDist) ? 1 : 0;
             } else {
                 return aQual > bQual ? -1 : (aQual < bQual) ? 1 : 0;
