@@ -335,6 +335,11 @@ No media query since this is the default in Bootstrap*/
 
 /*Extra large devices (large desktops, 1200px and up)*/
 
+  .person-img {
+    float: right;
+    width: 50px;
+    border-radius: 50%;
+}
 @media (min-width: 1200px) {
   #title {
     font-size: 200px;
