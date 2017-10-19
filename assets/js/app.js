@@ -88,6 +88,11 @@ var apiKeys = {
 
 };
 
+//burger animation
+window.onload=(function() {
+    var burg = document.getElementById("food1");
+    TweenMax.to(burg, 1, {y:100})
+})
 
 
 // URLs stored for the APIs used.
