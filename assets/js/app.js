@@ -31,9 +31,9 @@ var database = firebase.database();
 var provider = new firebase.auth.GoogleAuthProvider();
 
 
-function Review(uid, text) {
+function Review(uid, photoURL, text) {
     this.uid = uid;
-
+    this.photoURL;
     this.text = text;
 };
 // User object
@@ -146,7 +146,7 @@ $(document).ready(function () {
         currentCraving: 0,
         // Function to sort restaurant array by distance
         sortByDistance: function (a, b) {
-            return a.distance < b.distance ? -1 : (a.distance > b.distance) ? 1 : 0;
+            return a.distance > b.distance ? -1 : (a.distance < b.distance) ? 1 : 0;
         },
         // Function to sort restaurant array by quality
         // If two qualities match, we sort by distance instead.
@@ -155,10 +155,10 @@ $(document).ready(function () {
             bQual = b.aggregate_rating;
             aDist = a.distance;
             bDist = b.distance;
-            if(aQual === bQual) {
-                return aDist < bDist ? -1 : (aDist > bDist) ? 1 : 0;
+            if (aQual === bQual) {
+                return aDist > bDist ? -1 : (aDist < bDist) ? 1 : 0;
             } else {
-                return aQual < bQual ? -1 : (aQual > bQual) ? 1 : 0;
+                return aQual > bQual ? -1 : (aQual < bQual) ? 1 : 0;
             }
         },
         // Generic function to make Ajax call
@@ -227,6 +227,9 @@ $(document).ready(function () {
         },
         // Fades from one screen to the next
         switchScreens: function (closeId, openId, storeScreen, callback) {
+            if (closeId === openId) {
+                return;
+            }
             // Grabs the new currentScreen (used for back button functionality).
             app.currentScreen = openId;
             // Push the screen we are leaving into the lastScreens array should we be prompted.  We don't do this if the user hits the "back button"
@@ -252,12 +255,6 @@ $(document).ready(function () {
                     "height": 0,
                     "z-index": "0"
                 });
-                $("#footer").css({
-                    "display": "none"
-                });
-                $("#footer").css({
-                    "display": "block"
-                });
                 $(openId).animate({
                     opacity: 1
                 }, 500, function () {
@@ -274,6 +271,11 @@ $(document).ready(function () {
 
 
         },
+        getReviews: function (restId) {
+            return database.ref(getRestDataLoc(restId)).once("value").then(function (snapshot) {
+                return (snapshot.val().userReviews);
+            });
+        },
         // Loops through our restaurantResults array to get more values.
         populateResults: function () {
             var resultsBox = $("#results");
@@ -288,7 +290,7 @@ $(document).ready(function () {
                 } else if (rest.thumb !== "") {
                     image = rest.thumb;
                 } else {
-                    image = "assets/images/noimage.png";
+                    image = "assets/images/noimage-white.png";
                 }
                 for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
                     priceRange += "$";
@@ -309,9 +311,10 @@ $(document).ready(function () {
                                     <h4>Address: ${ rest.address }</h4>
                                     <h4>About ${ rest.distance } miles away.</h4>
                                     <h5>
-                                        <a href="${ apiUrls.googleDirsUrl }${app.latLong[0]},${app.latLong[1]}/${rest.googleAddress}" 
-                                        class="go-to-restaurant" data-index="${ i }">Let's Go!</a>
+                                        <button data-href="${ apiUrls.googleDirsUrl }${app.latLong[0]},${app.latLong[1]}/${rest.googleAddress}" 
+                                        class="go-to-restaurant" data-index="${ i }" type="button">Let's Go!</button>
                                     </h5>
+                                    <h5><button id="review-modal" data-restId="${ rest.id }" type="button">Click here to see User Reviews</button></h5>
                                 </div>
                                 </div>
                             </div>
@@ -319,10 +322,31 @@ $(document).ready(function () {
                     </div>`);
                 resultsBox.append(resultsDisplay);
 
-            };
+            };            
         },
+        pushRestaurant: function (newRestaurant) {
+            console.log(newRestaurant);
+            var hidePrev = $("#chk-hide-previous").is(":checked");
+            newRestaurant.distance = parseFloat(distance(app.latLong[0], app.latLong[1], newRestaurant.lat, newRestaurant.lon));
+            var canPush = true;
+            if (hidePrev) {
+                if (app.currentUser.restaurants) {
+                    for (var j = 0; j < app.currentUser.restaurants.length; j++) {
+                        if (newRestaurant.id === app.currentUser.restaurants[j]) {
+                            canPush = false;
+                        }
+                    }
+                }
+            }
+            if (canPush) {
+                console.log("PUSHED", newRestaurant);
+                app.restaurantResults.push(newRestaurant);
+            }
+
+        },
+        promises: [],
         findCraving(type) {
-            // If they've selected no craving, alert and bail.
+            
             if (app.currentCraving === 0) {
                 app.showAlert("No craving", "Please select a craving to continue!");
                 return;
@@ -365,7 +389,7 @@ $(document).ready(function () {
                 app.populateResults();
                 app.hideLoadingScreen();
                 app.switchScreens("#craving-select-screen", "#results-screen", true);
-            })
+            });
         },
         addRestuarantToDb: function (idx) {
             var restaurant = app.restaurantResults[idx];
@@ -413,8 +437,10 @@ $(document).ready(function () {
         },
         eventListeners: function () {
             $("#btn-home-burger").on("click", function (e) {
+                app.showLoadingScreen();
                 e.preventDefault();
                 app.switchScreens(app.currentScreen, "#craving-select-screen", true)
+                app.hideLoadingScreen();
             });
             $("#btn-sign-out").on("click", function () {
                 firebase.auth().signOut().then(function () {
@@ -426,9 +452,8 @@ $(document).ready(function () {
             });
             $("#btn-submit-review").on('click', function () {
                 var text = $("#user-review-text").val();
-                console.log(text);
                 if (text != "") {
-                    var review = new Review(app.currentUser.uid, text);
+                    var review = new Review(app.currentUser.uid, app.currentUser.photoURL, text);
                     if (!app.selectedRestaurant.userReviews) {
                         app.selectedRestaurant.userReviews = [];
                     }
@@ -437,7 +462,7 @@ $(document).ready(function () {
                     app.currentUser.lastRestaurantId = "";
                     app.currentUser.userHasEaten = false;
                     app.writeCurrentUser();
-                    app.switchScreens(app.currentScreen, "#craving-select-screen", false, function() {
+                    app.switchScreens(app.currentScreen, "#craving-select-screen", false, function () {
                         app.showAlert("Thank You!", "Thank you so much for leaving a review!");
                     });
                 } else {
@@ -473,13 +498,31 @@ $(document).ready(function () {
                 app.openReviewPage(app.currentScreen);
             });
             $(document).on("click", ".go-to-restaurant", function (e) {
-                e.preventDefault();
                 app.addRestuarantToDb(parseInt($(this).attr("data-index")));
                 app.openReviewPage("#results-screen");
-                window.open($(this).attr("href"));
+                window.open($(this).attr("data-href"));
 
             });
+            $(document).on("click", ".add-review", function () {
+                var index = parseInt($(this).attr("data-index"));
+                app.currentRestaurant = app.restaurantResults[index];
+                app.openReviewPage(app.currentScreen);
+            })
+            $(document).on("click", ".review-modal", function (e) {
+                var restId = $(this).attr("data-restId");
+                database.ref(getRestDataLoc(restId)).once("value", function (snapshot) {
+                    var restaurant = snapshot.val();
+                    if (!restaurant.userReviews || resturant.userReviews.length < 0) {
+                        app.showAlert("Error", "Sorry, there is an error that occured.  There are no reviews for this restaurant.");
+                        return;
+                    }
+                    var reviews = restuarant.userReviews;
+                    $("alert-title").text(restaurant.name + " reviews.");
+                    for (var i = 0; i < reviews.length; i++) {
 
+                    }
+                })
+            });
             $(".craving-box").on("click", function () {
                 app.currentCraving = $(this).attr("data-craving-id");
                 $(".craving-box").each(function () {
@@ -491,14 +534,16 @@ $(document).ready(function () {
                 if (result.credential) {
                     var token = result.credential.accessToken;
                 }
-                database.ref(getUsrDataLoc(result.user.uid)).once("value", function (snapshot) {
-                    app.currentUser = snapshot.val();
-                    if (!app.currentUser) {
-                        app.currentUser = new User(result.user.uid, result.user.displayName, result.user.email, result.user.photoURL);
-                        app.writeCurrentUser();
-                    }
-                });
-                app.switchScreens(app.currentScreen, "#craving-select-screen");
+                if (result.user) {
+                    database.ref(getUsrDataLoc(result.user.uid)).once("value").then(function (snapshot) {
+                        app.currentUser = snapshot.val();
+                        if (!app.currentUser) {
+                            app.currentUser = new User(result.user.uid, result.user.displayName, result.user.email, result.user.photoURL);
+                            app.writeCurrentUser();
+                        }
+                    });
+                    app.switchScreens(app.currentScreen, "#craving-select-screen");
+                }
             });
             firebase.auth().onAuthStateChanged(function (user) {
                 if (user) {
@@ -511,12 +556,11 @@ $(document).ready(function () {
                         });
                     } else {
                         app.callApi("get", apiUrls.googleGeoLocation, "", function (response) {
-                            console.log(app);
                             app.latLong = [response.location.lat, response.location.lng];
                             app.getCity();
                         });
                     };
-                    database.ref(getUsrDataLoc(app.currentUser.uid)).once("value", function (snapshot) {
+                    database.ref(getUsrDataLoc(app.currentUser.uid)).once("value").then(function (snapshot) {
                         var userData = snapshot.val();
                         if (!userData) {
                             app.currentUser = new User(app.currentUser.uid, app.currentUser.displayName, app.currentUser.email, app.currentUser.photoURL);
@@ -530,16 +574,16 @@ $(document).ready(function () {
                                 });
                             }
                         }
-                        $("#person-img").attr("src", userData.photoURL);
+                        $("#avatar").attr("src", userData.photoURL);
+                        // GO TO THE NEXT PAGE
+                        app.switchScreens(app.currentScreen, "#craving-select-screen", false, function () {
+                            if (showModal) {
+                                app.showYesNo('Welcome Back, ' + user.displayName,
+                                    `You recently satisfied a craving at ${ app.selectedRestaurant.name }!  Would you like to leave a review about your experience?`);
+                            }
+                        });
                     });
 
-                    // GO TO THE NEXT PAGE
-                    app.switchScreens(app.currentScreen, "#craving-select-screen", false, function () {
-                        if (showModal) {
-                            app.showYesNo('Welcome Back, ' + user.displayName,
-                                `You recently satisfied a craving at ${ app.selectedRestaurant.name }!  Would you like to leave a review about your experience?`);
-                        }
-                    });
                 } else {
                     $("#btn-sign-in").css("display", "block");
                 }
@@ -547,17 +591,17 @@ $(document).ready(function () {
         },
 
     }
-    
+
     // Catch the browser's back button event to perform our own back-effect (if it exists in window.history)
     window.onpopstate = function (event) {
         app.backButton();
     };
 
-    
+
     setTimeout(function () {
         app.switchScreens("#splash-screen", "#login-screen", true);
         app.eventListeners();
-    }, 2000);
+    }, 50);
     if (!("geolocation" in navigator)) {
         // GEOLOCATION IS UNAVAILABLE, CAN'T USE THE APP.
     }
