@@ -77,6 +77,10 @@ nav {
   background-color: #000;
 }
 
+.form-control {
+  background-color: rgb(243, 239, 122);
+}
+
 #btn-submit-review,
 #btn-back,
 #btn-startover {
