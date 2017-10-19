@@ -88,6 +88,11 @@ var apiKeys = {
 
 };
 
+//burger animation
+window.onload=(function() {
+    var burg = document.getElementById("food1");
+    TweenMax.to(burg, 1, {y:100})
+})
 
 
 // URLs stored for the APIs used.
@@ -288,7 +293,7 @@ $(document).ready(function () {
                 } else if (rest.thumb !== "") {
                     image = rest.thumb;
                 } else {
-                    image = "assets/images/noimage.png";
+                    image = "assets/images/noimage-white.png";
                 }
                 for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
                     priceRange += "$";
