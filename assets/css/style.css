@@ -295,6 +295,12 @@ nav {
   border-radius: 50%;
 }
 
+.modal-header {
+  border-bottom: 2px solid darkred;
+}
+.modal-footer {
+  border-top: 2px solid darkred;
+}
 
 /*Extra small devices (portrait phones, less than 576px)
 No media query since this is the default in Bootstrap*/
@@ -322,8 +328,14 @@ No media query since this is the default in Bootstrap*/
     font-size: 115px;
   }
 }
-
-
+#alert-body {
+  overflow-y: auto;
+  max-height: 400px;
+}
+.alert-modal-dialog {
+  width: auto;
+  max-width: 75%;
+}
 /*Large devices (desktops, 992px and up)*/
 
 @media (min-width: 992px) {

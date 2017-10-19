@@ -33,7 +33,7 @@ var provider = new firebase.auth.GoogleAuthProvider();
 
 function Review(uid, photoURL, text) {
     this.uid = uid;
-    this.photoURL;
+    this.photoURL = photoURL;
     this.text = text;
 };
 // User object
@@ -106,12 +106,12 @@ var apiUrls = {
 
 // Returns where we store users in the DB
 function getUsrDataLoc(uid) {
-    return "users/" + uid;
+    return "users/" + uid + "/";
 }
 
 // Returns where we store restaurants in the DB
 function getRestDataLoc(rid) {
-    return "restaurants/" + rid;
+    return "restaurants/" + rid + "/";
 }
 
 
@@ -151,7 +151,7 @@ $(document).ready(function () {
         currentCraving: 0,
         // Function to sort restaurant array by distance
         sortByDistance: function (a, b) {
-            return a.distance > b.distance ? -1 : (a.distance < b.distance) ? 1 : 0;
+            return a.distance - b.distance //? -1 : (a.distance < b.distance) ? 1 : 0;
         },
         // Function to sort restaurant array by quality
         // If two qualities match, we sort by distance instead.
@@ -161,7 +161,7 @@ $(document).ready(function () {
             aDist = a.distance;
             bDist = b.distance;
             if(aQual === bQual) {
-                return aDist > bDist ? -1 : (aDist < bDist) ? 1 : 0;
+                return aDist - bDist; // ? -1 : (aDist < bDist) ? 1 : 0;
             } else {
                 return aQual > bQual ? -1 : (aQual < bQual) ? 1 : 0;
             }
@@ -198,7 +198,7 @@ $(document).ready(function () {
         showAlert: function (title, body) {
 
             $("#alert-title").text(title);
-            $("#alert-body").text(body);
+            $("#alert-body").html(body);
             $("#alert-modal").modal();
         },
         // Shows the modal Yes/No dialog
@@ -289,14 +289,8 @@ $(document).ready(function () {
             for (var i = 0; i < 3; i++) {
                 var priceRange = "";
                 var rest = app.restaurantResults[i];
-                var image;
-                if (rest.featured_image !== "") {
-                    image = rest.featured_image;
-                } else if (rest.thumb !== "") {
-                    image = rest.thumb;
-                } else {
-                    image = "assets/images/noimage.png";
-                }
+                var image = rest.featuredImage !== "" ? rest.featured_image : rest.thumb !== "" ? rest.thumb : "assets/images/noimage.png";
+                
                 for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
                     priceRange += "$";
                 }
@@ -319,7 +313,7 @@ $(document).ready(function () {
                                         <button data-href="${ apiUrls.googleDirsUrl }${app.latLong[0]},${app.latLong[1]}/${rest.googleAddress}" 
                                         class="go-to-restaurant" data-index="${ i }" type="button">Let's Go!</button>
                                     </h5>
-                                    <h5><button id="review-modal" data-restId="${ rest.id }" type="button">Click here to see User Reviews</button></h5>
+                                    <h5><button class="review-modal" data-restId="${ rest.id }" data-idx="${ i }" type="button">Click here to see User Reviews</button></h5>
                                 </div>
                                 </div>
                             </div>
@@ -361,7 +355,7 @@ $(document).ready(function () {
             // Bu
             var callUrl = `${ apiUrls.zomatoBase }/search?lat=${ app.latLong[0] }&lon=${ app.latLong[1] }&cuisines=${ app.currentCraving }&radius=3000`;
             var hidePrev = $("#chk-hide-previous").is(":checked");
-            
+            console.log(hidePrev);
             app.restaurantResults.length = 0;
 
             app.callApi("get", callUrl, apiKeys.zomato.header, function (response) {
@@ -372,9 +366,11 @@ $(document).ready(function () {
 
                     newRestaurant.distance = parseFloat(distance(app.latLong[0], app.latLong[1], newRestaurant.lat, newRestaurant.lon));
                     var canPush = true;
+                    console.log(newRestaurant.id);
                     if (hidePrev) {
                         if (app.currentUser.restaurants) {
                             for (var j = 0; j < app.currentUser.restaurants.length; j++) {
+                                console.log("Restaurants: " + app.currentUser.restaurants[j])
                                 if (newRestaurant.id === app.currentUser.restaurants[j]) {
                                     canPush = false;
                                 }
@@ -396,14 +392,14 @@ $(document).ready(function () {
                 app.switchScreens("#craving-select-screen", "#results-screen", true);
             });
         },
-        addRestuarantToDb: function (idx) {
+        addRestaurantToDb: function (idx) {
             var restaurant = app.restaurantResults[idx];
             var dbRestLoc = getRestDataLoc(restaurant.id);
             var dbUsrLoc = getUsrDataLoc(app.currentUser.uid);
             app.selectedRestaurant = restaurant;
-            database.ref(dbUsrLoc).once("value", function (usrSnap) {
+            database.ref(dbUsrLoc).once("value").then(function (usrSnap) {
                 var user = usrSnap.val();
-                database.ref(dbRestLoc).once("value", function (snapshot) {
+                database.ref(dbRestLoc).once("value").then(function (snapshot) {
                     var restData = snapshot.val();
                     if (!restData) {
                         database.ref(dbRestLoc).set(restaurant);
@@ -417,6 +413,7 @@ $(document).ready(function () {
                 if (user.restaurants.indexOf(restaurant.id) === -1) {
                     user.restaurants.push(restaurant.id);
                 }
+                console.log(user);
                 database.ref(dbUsrLoc).update(user);
             });
         },
@@ -459,11 +456,16 @@ $(document).ready(function () {
                 var text = $("#user-review-text").val();
                 if (text != "") {
                     var review = new Review(app.currentUser.uid, app.currentUser.photoURL, text);
-                    if (!app.selectedRestaurant.userReviews) {
-                        app.selectedRestaurant.userReviews = [];
-                    }
-                    app.selectedRestaurant.userReviews.push(review);
-                    database.ref(getRestDataLoc(app.selectedRestaurant.id)).update(app.selectedRestaurant);
+                    database.ref(getRestDataLoc(app.selectedRestaurant.id)).once("value").then(function(snapshot) {
+                        var restaurant = snapshot.val();
+                        console.log(restaurant);
+                        if(!restaurant.userReviews) {
+                            restaurant.userReviews = [];
+                        }
+                        restaurant.userReviews.push(review);
+                        console.log(restaurant.userReviews);
+                        database.ref(getRestDataLoc(restaurant.id)).update(restaurant);
+                    })
                     app.currentUser.lastRestaurantId = "";
                     app.currentUser.userHasEaten = false;
                     app.writeCurrentUser();
@@ -503,7 +505,7 @@ $(document).ready(function () {
                 app.openReviewPage(app.currentScreen);
             });
             $(document).on("click", ".go-to-restaurant", function (e) {
-                app.addRestuarantToDb(parseInt($(this).attr("data-index")));
+                app.addRestaurantToDb(parseInt($(this).attr("data-index")));
                 app.openReviewPage("#results-screen");
                 window.open($(this).attr("data-href"));
 
@@ -515,17 +517,32 @@ $(document).ready(function () {
             })
             $(document).on("click", ".review-modal", function (e) {
                 var restId = $(this).attr("data-restId");
+                var idx = parseInt($(this).attr("data-idx"));
+                console.log(restId);
+                app.showLoadingScreen();
                 database.ref(getRestDataLoc(restId)).once("value", function (snapshot) {
+                    var reviewBody = "";
                     var restaurant = snapshot.val();
-                    if (!restaurant.userReviews || resturant.userReviews.length < 0) {
-                        app.showAlert("Error", "Sorry, there is an error that occured.  There are no reviews for this restaurant.");
-                        return;
+                    if(!restaurant) {
+                        restaurant = app.restaurantResults[idx];
                     }
-                    var reviews = restuarant.userReviews;
-                    $("alert-title").text(restaurant.name + " reviews.");
-                    for (var i = 0; i < reviews.length; i++) {
-
+                    if (!restaurant.userReviews || restaurant.userReviews.length < 0) {
+                        reviewBody = 
+                            `<p>Sorry, there are no reviews at this time.</p> 
+                             <p>Visit this restaurant and be the first to leave one!</p>`;
+                    } else {
+                        for(var i = 0; i < restaurant.userReviews.length; i++) {
+                            reviewBody += `
+                                <p><img class="person-img" src="${ restaurant.userReviews[i].photoURL }"></p>
+                                <p>${ restaurant.userReviews[i].text }</p>
+                                <div class="clearfix"></div>
+                                <hr>
+                                `
+                        }
                     }
+                    var reviews = restaurant.userReviews;
+                    app.showAlert(restaurant.name + " reviews.", reviewBody);
+                    app.hideLoadingScreen();
                 })
             });
             $(".craving-box").on("click", function () {
@@ -551,6 +568,7 @@ $(document).ready(function () {
                 }
             });
             firebase.auth().onAuthStateChanged(function (user) {
+                console.log("onAuthStateChange");
                 if (user) {
                     var showModal = false;
                     app.currentUser = user;
