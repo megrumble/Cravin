@@ -606,7 +606,7 @@ $(document).ready(function () {
     setTimeout(function () {
         app.switchScreens("#splash-screen", "#login-screen", true);
         app.eventListeners();
-    }, 50);
+    }, 2000);
     if (!("geolocation" in navigator)) {
         // GEOLOCATION IS UNAVAILABLE, CAN'T USE THE APP.
     }
