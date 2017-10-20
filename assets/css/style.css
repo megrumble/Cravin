@@ -146,6 +146,8 @@ nav {
   height: auto;
   letter-spacing: 5px;
   padding-bottom: 10px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #login-screen,
