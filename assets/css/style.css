@@ -167,9 +167,11 @@ nav {
   display: none;
   opacity: 0;
 }
+
 #chk-hide-previous {
   transform: scale(2);
 }
+
 #splash-screen {
   display: block;
   opacity: 1;
@@ -327,6 +329,9 @@ No media query since this is the default in Bootstrap*/
   }
   h3 {
     font-size: 35px;
+  }
+  #add-review {
+    padding-top: 25px;
   }
 }
 
