@@ -91,7 +91,7 @@ var apiKeys = {
 //burger animation
 window.onload=(function() {
     var burg = document.getElementById("food1");
-    TweenMax.to(burg, 1, {y:100})
+        TweenMax.to(burg, 1, {y:100})
 })
 
 
@@ -126,12 +126,7 @@ function distance(lat1, lon1, lat2, lon2) {
     var milesAway = (12742 * Math.asin(Math.sqrt(a))) / 1.609344;
     return (milesAway).toFixed(1); // 2 * R; R = 6371 km
 }
-/*window.onload=(function() {
-    var burgTop = $("#food1").offset().top;
-    $("#food1").offset().top -= 120;
-    var burg = document.getElementById("food1");
-    //TweenMax.to(burg, 1, { y:60 })
-})*/
+
 
 $(document).ready(function () {
     // App instance
@@ -151,7 +146,7 @@ $(document).ready(function () {
         currentCraving: 0,
         // Function to sort restaurant array by distance
         sortByDistance: function (a, b) {
-            return a.distance - b.distance //? -1 : (a.distance < b.distance) ? 1 : 0;
+            return a.distance - b.distance;
         },
         // Function to sort restaurant array by quality
         // If two qualities match, we sort by distance instead.
@@ -161,11 +156,152 @@ $(document).ready(function () {
             aDist = a.distance;
             bDist = b.distance;
             if(aQual === bQual) {
-                return aDist - bDist; // ? -1 : (aDist < bDist) ? 1 : 0;
+                return aDist - bDist; 
             } else {
                 return aQual > bQual ? -1 : (aQual < bQual) ? 1 : 0;
             }
         },
+        
+        // Shows the Modal alert dialog
+        showAlert: function (title, body) {
+
+            $("#alert-title").text(title);
+            $("#alert-body").html(body);
+            $("#alert-modal").modal();
+        },
+        
+        // Shows the modal Yes/No dialog
+        showYesNo: function (title, body) {
+            $("#btn-yes").prop("disabled", false);
+            $("#btn-no").prop("disabled", false);
+            $("#yes-no-title").text(title);
+            $("#yes-no-body").text(body);
+            $("#yes-no-modal").modal();
+        },
+
+        // Hides the modal Yes/No Dialog
+        hideYesNo: function () {
+            $("#btn-yes").prop("disabled", true);
+            $("#btn-no").prop("disabled", true);
+            $("#yes-no-modal").modal('hide');
+        },
+        
+        // Displays our "loading" indicator that displays a font-awesome spinner
+        showLoadingScreen: function () {
+            var body = document.body;
+            var html = document.documentElement;
+            // Since our screens are continually changing the height of the DOM, we find the absolute highest height at the moment.
+            var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
+            $("#loading-screen").css({
+                "height": height,
+                "display": "block"
+            });
+        },
+        
+        // Hides the loading screen
+        hideLoadingScreen: function () {
+            $("#loading-screen").css("display", "none");
+        },
+        
+        // Fades from one screen to the next
+        switchScreens: function (closeId, openId, storeScreen, callback) {
+            if (closeId === openId) {
+                return;
+            }
+            // Grabs the new currentScreen (used for back button functionality).
+            app.currentScreen = openId;
+            
+            // Push the screen we are leaving into the lastScreens array should we be prompted.  We don't do this if the user hits the "back button"
+            // or from the splash screen.  This helps us utilize the back-button on a SPA.
+            if (storeScreen === true) {
+                window.history.pushState({
+                    state: window.history.length
+                }, "", closeId);
+                app.lastScreens.push(closeId);
+            }
+            
+            // Animate the closing, and change the CSS
+            $(closeId).animate({
+                opacity: 0
+            }, 500, function () { 
+                $(openId).css({
+                    "display": "block",
+                    "min-height": "85vh",
+                    "height": "auto",
+                    "z-index": "9"
+                });
+                $(closeId).css({
+                    "display": "none",
+                    "height": 0,
+                    "z-index": "0"
+                });
+                $(openId).animate({
+                    opacity: 1
+                }, 500, function () {
+                    // Scrolls to the top, which will now be our full screen.
+                    $('html, body').animate({
+                        scrollTop: 0
+                    });
+                    // Check if we need to run a callback function
+                    if (callback) {
+                        callback();
+                    }
+                });
+            });
+        },
+
+        // Loops through our restaurantResults array to get more values.
+        populateResults: function () {
+            var resultsBox = $("#results");
+            resultsBox.empty();
+            // Cycles through all restaurants
+            for (var i = 0; i < 3; i++) {
+                var priceRange = "";    // String for our priceRange.  Will display in $$$
+                
+                //  Grabs our current restaurant object
+                var rest = app.restaurantResults[i];
+
+                // See if a featured_image or thumb exist, if not default to our placeholder.
+                var image = rest.featured_image !== "" ? rest.featured_image : rest.thumb !== "" ? rest.thumb : "assets/images/noimage.png";
+                
+                // Builds our pricerange string
+                for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
+                    priceRange += "$";
+                }
+
+                //  Builds our results box
+                var resultsDisplay = $(`
+                    <div class="row justify-content-center">    
+                        <div class="col-12">
+                            <div class="row results-box first-result clearfix">
+                                <div class="col-12 col-md-4">
+                                <img class="results-image img-fluid img-thumbnail" src="${ image }" />
+                                </div>
+                                <div class="col-12 col-md-8">
+                                <div class="restaurant-info">
+                                    <h3 class="restaurant-name">${ rest.name }</h3>
+                                    <h4>Average Rating: ${ rest.aggregate_rating} - ${ rest.rating_text }</h4>
+                                    <h4>Price Range: <span style="color: green;">${ priceRange }</span></h4>
+                                    <h4>Address: ${ rest.address }</h4>
+                                    <h4>About ${ rest.distance } miles away.</h4>
+                                    <h5>
+                                        <button data-href="${ apiUrls.googleDirsUrl }${app.latLong[0]},${app.latLong[1]}/${rest.googleAddress}" 
+                                        class="go-to-restaurant" data-index="${ i }" type="button">Let's Go!</button>
+                                    </h5>
+                                    <h5><button class="review-modal" data-restId="${ rest.id }" data-idx="${ i }" type="button">Click here to see User Reviews</button></h5>
+                                </div>
+                                </div>
+                            </div>
+                       </div>                       
+                    </div>`);
+                //  Appends our results to our results div.
+                resultsBox.append(resultsDisplay);
+
+            };            
+        },
+        // UGHHH promises: [],
+
+
         // Generic function to make Ajax call
         callApi: function (type, url, headers, callback) {
             $.ajax({
@@ -194,199 +330,65 @@ $(document).ready(function () {
                 });
             });
         },
-        // Shows the Modal alert dialog
-        showAlert: function (title, body) {
-
-            $("#alert-title").text(title);
-            $("#alert-body").html(body);
-            $("#alert-modal").modal();
-        },
-        // Shows the modal Yes/No dialog
-        showYesNo: function (title, body) {
-            $("#btn-yes").prop("disabled", false);
-            $("#btn-no").prop("disabled", false);
-            $("#yes-no-title").text(title);
-            $("#yes-no-body").text(body);
-            $("#yes-no-modal").modal();
-        },
-        // Hides the modal Yes/No Dialog
-        hideYesNo: function () {
-            $("#btn-yes").prop("disabled", true);
-            $("#btn-no").prop("disabled", true);
-            $("#yes-no-modal").modal('hide');
-        },
-        // Displays our "loading" indicator that displays a font-awesome spinner
-        showLoadingScreen: function () {
-            var body = document.body;
-            var html = document.documentElement;
-            // Since our screens are continually changing the height of the DOM, we find the absolute highest height at the moment.
-            var height = Math.max(body.scrollHeight, body.offsetHeight, html.clientHeight, html.scrollHeight, html.offsetHeight);
-            $("#loading-screen").css({
-                "height": height,
-                "display": "block"
-            });
-        },
-        // Hides the loading screen
-        hideLoadingScreen: function () {
-            $("#loading-screen").css("display", "none");
-        },
-        // Fades from one screen to the next
-        switchScreens: function (closeId, openId, storeScreen, callback) {
-            if (closeId === openId) {
-                return;
-            }
-            // Grabs the new currentScreen (used for back button functionality).
-            app.currentScreen = openId;
-            // Push the screen we are leaving into the lastScreens array should we be prompted.  We don't do this if the user hits the "back button"
-            // or from the splash screen.
-            if (storeScreen === true) {
-                window.history.pushState({
-                    state: window.history.length
-                }, "", closeId);
-                app.lastScreens.push(closeId);
-            }
-            // Animate the closing, and change the CSS
-            $(closeId).animate({
-                opacity: 0
-            }, 500, function () {
-                $(openId).css({
-                    "display": "block",
-                    "min-height": "85vh",
-                    "height": "auto",
-                    "z-index": "9"
-                });
-                $(closeId).css({
-                    "display": "none",
-                    "height": 0,
-                    "z-index": "0"
-                });
-                $(openId).animate({
-                    opacity: 1
-                }, 500, function () {
-                    $('html, body').animate({
-                        scrollTop: 0
-                    });
-                    if (callback) {
-                        callback();
-                    }
-                });
-            });
-
-            // Change the opening screens CSS and animate the opening.
-
-
-        },
-        getReviews: function (restId) {
-            return database.ref(getRestDataLoc(restId)).once("value").then(function (snapshot) {
-                return (snapshot.val().userReviews);
-            });
-        },
-        // Loops through our restaurantResults array to get more values.
-        populateResults: function () {
-            var resultsBox = $("#results");
-            resultsBox.empty();
-            // Cycles through all restaurants
-            for (var i = 0; i < 3; i++) {
-                var priceRange = "";
-                var rest = app.restaurantResults[i];
-                var image = rest.featured_image !== "" ? rest.featured_image : rest.thumb !== "" ? rest.thumb : "assets/images/noimage.png";
-                
-                for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
-                    priceRange += "$";
-                }
-
-                var resultsDisplay = $(`
-                    <div class="row justify-content-center">    
-                        <div class="col-12">
-                            <div class="row results-box first-result clearfix">
-                                <div class="col-12 col-md-4">
-                                <img class="results-image img-fluid img-thumbnail" src="${ image }" />
-                                </div>
-                                <div class="col-12 col-md-8">
-                                <div class="restaurant-info">
-                                    <h3 class="restaurant-name">${ rest.name }</h3>
-                                    <h4>Average Rating: ${ rest.rating_text }</h4>
-                                    <h4>Price Range: <span style="color: green;">${ priceRange }</span></h4>
-                                    <h4>Address: ${ rest.address }</h4>
-                                    <h4>About ${ rest.distance } miles away.</h4>
-                                    <h5>
-                                        <button data-href="${ apiUrls.googleDirsUrl }${app.latLong[0]},${app.latLong[1]}/${rest.googleAddress}" 
-                                        class="go-to-restaurant" data-index="${ i }" type="button">Let's Go!</button>
-                                    </h5>
-                                    <h5><button class="review-modal" data-restId="${ rest.id }" data-idx="${ i }" type="button">Click here to see User Reviews</button></h5>
-                                </div>
-                                </div>
-                            </div>
-                       </div>                       
-                    </div>`);
-                resultsBox.append(resultsDisplay);
-
-            };            
-        },
-        pushRestaurant: function (newRestaurant) {
-            console.log(newRestaurant);
-            var hidePrev = $("#chk-hide-previous").is(":checked");
-            newRestaurant.distance = parseFloat(distance(app.latLong[0], app.latLong[1], newRestaurant.lat, newRestaurant.lon));
-            var canPush = true;
-            if (hidePrev) {
-                if (app.currentUser.restaurants) {
-                    for (var j = 0; j < app.currentUser.restaurants.length; j++) {
-                        if (newRestaurant.id === app.currentUser.restaurants[j]) {
-                            canPush = false;
-                        }
-                    }
-                }
-            }
-            if (canPush) {
-                console.log("PUSHED", newRestaurant);
-                app.restaurantResults.push(newRestaurant);
-            }
-
-        },
-        promises: [],
+        
+        // Our function that calls the zomato api
         findCraving(type) {
             
+            // Make sure a craving has been selected - if not alert user and abort.
             if (app.currentCraving === 0) {
                 app.showAlert("No craving", "Please select a craving to continue!");
                 return;
             }
             // Opens the loading screen
             app.showLoadingScreen();
-            // Bu
+            // Builds our call url.
+                              // Base URL                          // Current LAT        //Current Lon                  // CurrentCraving 
             var callUrl = `${ apiUrls.zomatoBase }/search?lat=${ app.latLong[0] }&lon=${ app.latLong[1] }&cuisines=${ app.currentCraving }&radius=3000`;
+            
+            // See if the user opted to hide restaurants they've visited.
             var hidePrev = $("#chk-hide-previous").is(":checked");
-            console.log(hidePrev);
+            
+            // Zero out our array.
             app.restaurantResults.length = 0;
 
+            // Performs the API call.
             app.callApi("get", callUrl, apiKeys.zomato.header, function (response) {
+                // Loops through our responses
                 for (var i = 0; i < response.restaurants.length; i++) {
+                    // Gets the current restaurant.
                     var rest = response.restaurants[i].restaurant;
+                    // Creates an object
                     var newRestaurant = new Restaurant(rest.id, rest.name, rest.location.address, rest.location.latitude, rest.location.longitude,
                         rest.thumb, rest.price_range, rest.average_cost_for_two, rest.featured_image, rest.user_rating.rating_text, rest.user_rating.aggregate_rating);
-
+                    // Gets the distance as a float
                     newRestaurant.distance = parseFloat(distance(app.latLong[0], app.latLong[1], newRestaurant.lat, newRestaurant.lon));
+                    // Assume we can push it into our results array.
                     var canPush = true;
-                    console.log(newRestaurant.id);
+                    // If we want to hide it
                     if (hidePrev) {
+                        // Make sure we have a list of restaurants the user has been to
                         if (app.currentUser.restaurants) {
+                            // Loop through the users' visited restaurants
                             for (var j = 0; j < app.currentUser.restaurants.length; j++) {
-                                console.log("Restaurants: " + app.currentUser.restaurants[j])
+                                // Compare it with our current working restaurant
                                 if (newRestaurant.id === app.currentUser.restaurants[j]) {
+                                    // If it's there, flag we cannot push it to the array.
                                     canPush = false;
                                 }
                             }
                         }
                     }
                     if (canPush) {
+                        // If we made it, push it into our results array.
                         app.restaurantResults.push(newRestaurant);
                     }
                 };
+                // if the user wanted
                 if (type === "fast") {
                     app.restaurantResults.sort(app.sortByDistance);
                 } else {
                     app.restaurantResults.sort(app.sortByQuality);
                 }
-
                 app.populateResults();
                 app.hideLoadingScreen();
                 app.switchScreens("#craving-select-screen", "#results-screen", true);
@@ -394,11 +396,16 @@ $(document).ready(function () {
         },
         addRestaurantToDb: function (idx) {
             var restaurant = app.restaurantResults[idx];
+            console.log("Restaurant", restaurant);
             var dbRestLoc = getRestDataLoc(restaurant.id);
+            console.log(dbRestLoc);
             var dbUsrLoc = getUsrDataLoc(app.currentUser.uid);
+            console.log("user location = " + dbUsrLoc );
             app.selectedRestaurant = restaurant;
+            console.log(app.selectedRestaurant);
             database.ref(dbUsrLoc).once("value").then(function (usrSnap) {
                 var user = usrSnap.val();
+                console.log("user : ", user);
                 database.ref(dbRestLoc).once("value").then(function (snapshot) {
                     var restData = snapshot.val();
                     if (!restData) {
@@ -411,10 +418,9 @@ $(document).ready(function () {
                     user.restaurants = [];
                 }
                 if (user.restaurants.indexOf(restaurant.id) === -1) {
-                    user.restaurants.push(restaurant.id);
+                    app.currentUser.restaurants.push(restaurant.id);
                 }
-                console.log(user);
-                database.ref(dbUsrLoc).update(user);
+                app.writeCurrentUser();
             });
         },
         backButton: function () {
@@ -452,20 +458,19 @@ $(document).ready(function () {
                     // An error happened.
                 });
             });
-            $("#btn-submit-review").on('click', function () {
+            $("#btn-submit-review").on('click', function (e) {
+                e.preventDefault();
                 var text = $("#user-review-text").val();
                 if (text != "") {
                     var review = new Review(app.currentUser.uid, app.currentUser.photoURL, text);
                     database.ref(getRestDataLoc(app.selectedRestaurant.id)).once("value").then(function(snapshot) {
                         var restaurant = snapshot.val();
-                        console.log(restaurant);
                         if(!restaurant.userReviews) {
                             restaurant.userReviews = [];
                         }
                         restaurant.userReviews.push(review);
-                        console.log(restaurant.userReviews);
                         database.ref(getRestDataLoc(restaurant.id)).update(restaurant);
-                    })
+                    });
                     app.currentUser.lastRestaurantId = "";
                     app.currentUser.userHasEaten = false;
                     app.writeCurrentUser();
@@ -475,7 +480,12 @@ $(document).ready(function () {
                 } else {
                     app.showAlert("You cannot submit a blank review!");
                 }
+                $("#user-review-text").val("");
             });
+            $("#btn-clear-review").on("click", function(e) {
+                e.preventDefault();
+                $("#user-review-text").val("");
+            })
             $("#btn-fast").on('click', function (e) {
                 e.preventDefault();
                 app.findCraving("fast")
@@ -518,7 +528,6 @@ $(document).ready(function () {
             $(document).on("click", ".review-modal", function (e) {
                 var restId = $(this).attr("data-restId");
                 var idx = parseInt($(this).attr("data-idx"));
-                console.log(restId);
                 app.showLoadingScreen();
                 database.ref(getRestDataLoc(restId)).once("value", function (snapshot) {
                     var reviewBody = "";
@@ -568,7 +577,6 @@ $(document).ready(function () {
                 }
             });
             firebase.auth().onAuthStateChanged(function (user) {
-                console.log("onAuthStateChange");
                 if (user) {
                     var showModal = false;
                     app.currentUser = user;
