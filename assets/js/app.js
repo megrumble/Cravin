@@ -262,7 +262,7 @@ $(document).ready(function () {
                 var rest = app.restaurantResults[i];
 
                 // See if a featured_image or thumb exist, if not default to our placeholder.
-                var image = rest.featured_image !== "" ? rest.featured_image : rest.thumb !== "" ? rest.thumb : "assets/images/noimage.png";
+                var image = rest.featured_image !== "" ? rest.featured_image : rest.thumb !== "" ? rest.thumb : "assets/images/noimage-white.png";
                 
                 // Builds our pricerange string
                 for (var x = 0; x < Math.floor(app.restaurantResults[i].price_range); x++) {
