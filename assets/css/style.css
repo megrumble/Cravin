@@ -77,6 +77,10 @@ nav {
   background-color: #000;
 }
 
+#add-review {
+  padding-top: 60px;
+}
+
 .form-control {
   background-color: rgb(243, 239, 122);
 }
@@ -146,6 +150,8 @@ nav {
   height: auto;
   letter-spacing: 5px;
   padding-bottom: 10px;
+  padding-left: 0;
+  padding-right: 0;
 }
 
 #login-screen,
@@ -298,9 +304,11 @@ nav {
 .modal-header {
   border-bottom: 2px solid darkred;
 }
+
 .modal-footer {
   border-top: 2px solid darkred;
 }
+
 
 /*Extra small devices (portrait phones, less than 576px)
 No media query since this is the default in Bootstrap*/
@@ -328,14 +336,18 @@ No media query since this is the default in Bootstrap*/
     font-size: 115px;
   }
 }
+
 #alert-body {
   overflow-y: auto;
   max-height: 400px;
 }
+
 .alert-modal-dialog {
   width: auto;
   max-width: 75%;
 }
+
+
 /*Large devices (desktops, 992px and up)*/
 
 @media (min-width: 992px) {
@@ -347,11 +359,12 @@ No media query since this is the default in Bootstrap*/
 
 /*Extra large devices (large desktops, 1200px and up)*/
 
-  .person-img {
-    float: right;
-    width: 50px;
-    border-radius: 50%;
+.person-img {
+  float: right;
+  width: 50px;
+  border-radius: 50%;
 }
+
 @media (min-width: 1200px) {
   #title {
     font-size: 200px;
