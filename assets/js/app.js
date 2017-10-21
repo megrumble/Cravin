@@ -389,31 +389,42 @@ $(document).ready(function () {
                 } else {
                     app.restaurantResults.sort(app.sortByQuality);
                 }
+                // Populate our results screen
                 app.populateResults();
+                // Hide the loading overlay
                 app.hideLoadingScreen();
+                // Fade into our results screen
                 app.switchScreens("#craving-select-screen", "#results-screen", true);
             });
         },
+        // Checks to see if a restaurant is in the DB by ID.
+        // This function fires 
         addRestaurantToDb: function (idx) {
+            //  Gets the restaurant by ID.
             var restaurant = app.restaurantResults[idx];
-            console.log("Restaurant", restaurant);
+            // Gets the location of restaurants in the db
             var dbRestLoc = getRestDataLoc(restaurant.id);
-            console.log(dbRestLoc);
+            // Gets the users location from the db.
             var dbUsrLoc = getUsrDataLoc(app.currentUser.uid);
-            console.log("user location = " + dbUsrLoc );
+            // Assign our selected Restaurant to our current restaurant.
             app.selectedRestaurant = restaurant;
-            console.log(app.selectedRestaurant);
+            // Get the current user data from the restaurant.
             database.ref(dbUsrLoc).once("value").then(function (usrSnap) {
+                // Assign the data
                 var user = usrSnap.val();
-                console.log("user : ", user);
+                // Check if this restaurant exists in our restaurant table
                 database.ref(dbRestLoc).once("value").then(function (snapshot) {
                     var restData = snapshot.val();
                     if (!restData) {
+                        // If not, write it to the database
                         database.ref(dbRestLoc).set(restaurant);
                     }
                 });
-                user.userHasEaten = true;
-                user.lastRestaurantId = restaurant.id;
+                // Flag our user has eaten
+                app.currentUser.userHasEaten = true;
+                // Assign which restaurant they ate at
+                app.currentUser.lastRestaurantId = restaurant.id;
+                // If the restaurant array doesn't exist for the user
                 if (!user.restaurants) {
                     user.restaurants = [];
                 }
