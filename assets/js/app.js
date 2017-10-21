@@ -535,7 +535,7 @@ $(document).ready(function () {
                     if(!restaurant) {
                         restaurant = app.restaurantResults[idx];
                     }
-                    if (!restaurant.userReviews || restaurant.userReviews.length < 0) {
+                    if (!restaurant.userReviews || restaurant.userReviews.length <= 0) {
                         reviewBody = 
                             `<p>Sorry, there are no reviews at this time.</p> 
                              <p>Visit this restaurant and be the first to leave one!</p>`;
