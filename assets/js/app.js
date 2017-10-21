@@ -389,23 +389,27 @@ $(document).ready(function () {
                 } else {
                     app.restaurantResults.sort(app.sortByQuality);
                 }
+                // Populate our results screen
                 app.populateResults();
+                // Hide the loading overlay
                 app.hideLoadingScreen();
+                // Fade into our results screen
                 app.switchScreens("#craving-select-screen", "#results-screen", true);
             });
         },
+        // Checks to see if a restaurant is in the DB by ID.
+        // This function fires 
         addRestaurantToDb: function (idx) {
+            //  Gets the restaurant by ID.
             var restaurant = app.restaurantResults[idx];
-            console.log("Restaurant", restaurant);
+            // Gets the location of restaurants in the db
             var dbRestLoc = getRestDataLoc(restaurant.id);
-            console.log(dbRestLoc);
+            // Gets the users location from the db.
             var dbUsrLoc = getUsrDataLoc(app.currentUser.uid);
-            console.log("user location = " + dbUsrLoc );
+            // So we can
             app.selectedRestaurant = restaurant;
-            console.log(app.selectedRestaurant);
             database.ref(dbUsrLoc).once("value").then(function (usrSnap) {
                 var user = usrSnap.val();
-                console.log("user : ", user);
                 database.ref(dbRestLoc).once("value").then(function (snapshot) {
                     var restData = snapshot.val();
                     if (!restData) {
