@@ -406,18 +406,25 @@ $(document).ready(function () {
             var dbRestLoc = getRestDataLoc(restaurant.id);
             // Gets the users location from the db.
             var dbUsrLoc = getUsrDataLoc(app.currentUser.uid);
-            // So we can
+            // Assign our selected Restaurant to our current restaurant.
             app.selectedRestaurant = restaurant;
+            // Get the current user data from the restaurant.
             database.ref(dbUsrLoc).once("value").then(function (usrSnap) {
+                // Assign the data
                 var user = usrSnap.val();
+                // Check if this restaurant exists in our restaurant table
                 database.ref(dbRestLoc).once("value").then(function (snapshot) {
                     var restData = snapshot.val();
                     if (!restData) {
+                        // If not, write it to the database
                         database.ref(dbRestLoc).set(restaurant);
                     }
                 });
-                user.userHasEaten = true;
-                user.lastRestaurantId = restaurant.id;
+                // Flag our user has eaten
+                app.currentUser.userHasEaten = true;
+                // Assign which restaurant they ate at
+                app.currentUser.lastRestaurantId = restaurant.id;
+                // If the restaurant array doesn't exist for the user
                 if (!user.restaurants) {
                     user.restaurants = [];
                 }
