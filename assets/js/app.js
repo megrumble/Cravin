@@ -304,21 +304,24 @@ $(document).ready(function () {
 
         // Generic function to make Ajax call
         callApi: function (type, url, headers, callback) {
-            $.ajax({
-                type: type,
-                url: url,
-                headers: headers,
-                success: function (response) {
-                    callback(response);
-                }
-            });
+            return new Promise((resolve, reject) => {
+                $.ajax({
+                    type: type,
+                    url: url,
+                    headers: headers,
+                    success: function (response) {
+                        resolve(response);
+                    }
+                });
+            })
+
         },
         // Calls the Zomato API to get the user's City Id
         getCity: function () {
             // Builds the url to call
             var callUrl = `${ apiUrls.zomatoBase }cities?lat=${ this.latLong[0] }&lon=${ this.latLong[1] }`;
             // Calls the API
-            this.callApi("get", callUrl, apiKeys.zomato.header, function (response) {
+            this.callApi("get", callUrl, apiKeys.zomato.header).then((response) => {
                 // Parses the results, stores them in the Firebase storage bucket
                 app.currentUser.currentCityId = response.location_suggestions[0].id;
                 app.currentUser.currentCity = response.location_suggestions[0].name;
@@ -328,6 +331,8 @@ $(document).ready(function () {
                     currentCity: app.currentUser.currentCity,
                     currentState: app.currentUser.currentState,
                 });
+            }).catch((err) => { 
+
             });
         },
         
@@ -352,7 +357,7 @@ $(document).ready(function () {
             app.restaurantResults.length = 0;
 
             // Performs the API call.
-            app.callApi("get", callUrl, apiKeys.zomato.header, function (response) {
+            app.callApi("get", callUrl, apiKeys.zomato.header).then((response) => {
                 // Loops through our responses
                 for (var i = 0; i < response.restaurants.length; i++) {
                     // Gets the current restaurant.
@@ -597,7 +602,7 @@ $(document).ready(function () {
                             app.getCity();
                         });
                     } else {
-                        app.callApi("get", apiUrls.googleGeoLocation, "", function (response) {
+                        app.callApi("get", apiUrls.googleGeoLocation, "").then((response) => {
                             app.latLong = [response.location.lat, response.location.lng];
                             app.getCity();
                         });
